@@ -1,9 +1,12 @@
 NAME		=	ircserv
 
-INC			=	hdrs/IRCServer.hpp
+INC			=	hdrs/ircserv.hpp \
+				hdrs/IRCServer.hpp \
+				hdrs/utils.hpp
 
 SRCS 		=	srcs/ircserv.cpp \
 				srcs/IRCServer.cpp \
+				utils/ft_atoi.cpp
 
 OBJS 		=	${addprefix objs/, ${SRCS:.cpp=.o}}
 
