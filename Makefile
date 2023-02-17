@@ -6,7 +6,7 @@ INC			=	hdrs/ircserv.hpp \
 
 SRCS 		=	srcs/ircserv.cpp \
 				srcs/IRCServer.cpp \
-				utils/ft_atoi.cpp
+				utils/utils.cpp
 
 OBJS 		=	${addprefix objs/, ${SRCS:.cpp=.o}}
 

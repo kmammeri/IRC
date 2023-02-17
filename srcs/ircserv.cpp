@@ -18,7 +18,7 @@ int main(int ac, char *av[]) {
 				<< "Port must be a number" << endl;
 		return 0;
 	}
-	int port = ft_atoi(av[1]);
+	int port = atoi(av[1]);
 	if (port < 0 || port > 65535) {
 		cout	<< "Usage: ./ircserv <port> <password>" << endl
 				<< "Port range required: [0...65535]" << endl;
