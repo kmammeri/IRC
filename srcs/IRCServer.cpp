@@ -8,6 +8,8 @@ IRCServer::IRCServer(int port,  const char* password):
 
 void IRCServer::start() {
     // Create a socket
+    bzero(this->_sockaddr.sin_zero, sizeof(this->_sockaddr.sin_zero));
+
     this->_sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (this->_sockfd < 0) {
         std::cerr << "Error: socket() failed" << std::endl;
@@ -15,7 +17,7 @@ void IRCServer::start() {
     }
 
 	// Bind the socket to the port
-    bind(this->_sockfd, this->_addr, sizeof(_addr));
+    bind(this->_sockfd, (sockaddr *)&this->_sockaddr, sizeof(_sockaddr));
     
     // Listen for connections
     listen(this->_sockfd, 5);

@@ -6,7 +6,7 @@
 int main(int ac, char *av[]) {
 	
 	// Check number of arguments
-	if (ac < 3 || ac > 4) {
+	if (ac != 3) {
 		cout << "Usage: ./ircserv <port> <password>" << endl;
 		return 0;
 	}
