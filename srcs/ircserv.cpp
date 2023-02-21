@@ -13,7 +13,7 @@ int main(int ac, char *av[]) {
 
 	// Check port
 	string strport(av[1]);
-	if (strport.find_first_not_of("0123456789") != string::npos && strport[0] != '-' && strport[0] != '+') {
+	if (strport.find_first_not_of("0123456789") != string::npos) {
 		cout	<< "Usage: ./ircserv <port> <password>" << endl
 				<< "Port must be a number" << endl;
 		return 0;
