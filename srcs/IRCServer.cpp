@@ -13,7 +13,7 @@ void IRCServer::start() {
         std::cerr << "Error: socket() failed" << std::endl;
         exit(1);
     }
-    
+
 
     bzero(this->_sockaddr.sin_zero, sizeof(this->_sockaddr.sin_zero));
     this->_sockaddr.sin_family = AF_INET;
@@ -22,10 +22,16 @@ void IRCServer::start() {
     
 
 	// Bind the socket to the port
-    bind(this->_sockfd, (sockaddr *)&this->_sockaddr, sizeof(_sockaddr));
+    if (bind(this->_sockfd, (struct sockaddr *)&this->_sockaddr, sizeof(this->_sockaddr)) < 0) {
+        std::cerr << "Error: bind() failed" << std::endl;
+        exit(1);
+    }
     
     // Listen for connections
-    listen(this->_sockfd, 5);
+    if (listen(this->_sockfd, 5) < 0) {
+        std::cerr << "Error: listen() failed" << std::endl;
+        exit(1);
+    }
 
 	// Accept connections
     while (1) {
@@ -33,6 +39,9 @@ void IRCServer::start() {
         if (clientfd < 0) {
             std::cerr << "Error: accept() failed" << std::endl;
             exit(1);
+        }
+        else {
+            std::cout << "New connection on  SERV fd: " << this->_sockfd << "at CLI fd:" << clientfd << std::endl;
         }
     }
 
