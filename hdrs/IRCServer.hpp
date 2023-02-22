@@ -5,6 +5,7 @@
 # include <netinet/in.h>
 # include <cstdlib>
 # include <map>
+# include <strings.h>
 
 using namespace std;
 
