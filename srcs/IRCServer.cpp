@@ -1,3 +1,4 @@
+
 #include "../hdrs/IRCServer.hpp"
 #include "../hdrs/ircserv.hpp"
 
@@ -45,15 +46,46 @@ void IRCServer::start() {
 		// Wait for a activity on one of the sockets
 		poll(this->_fds.data(), this->_fds.size(), -1);
 
-		// Accept the connection
-		try {   
-			this->acceptConnection();
-			std::cout << "New connection on  SERV fd: " << this->_mainSock << " at CLI fd:" << /*this->_clients[0] <<*/ std::endl;
+		// If something happened on the main socket, then it's an incoming connection
+		// else it's a message from a client
+		for (size_t i = 0; i < this->_fds.size(); i++) {
+			if (this->_fds[i].revents & POLLIN) {
+				if (this->_fds[i].fd == this->_mainSock) {
+					try	{
+						acceptConnection();
+						std::cout << "New connection on SERV" << std::endl;
+					}
+					catch(const std::exception& e) {
+						std::cerr << e.what() << '\n';
+					}
+					
+				}
+				else {
+					try {
+						receiveMessage(this->_fds[i].fd);
+					}
+					catch(const std::exception& e) {
+						std::cerr << e.what() << '\n';
+					}
+				}
+			}
 		}
-		catch (std::exception &e) {
-			std::cerr << e.what() << std::endl;
-		}
+	}
+}
 
+void IRCServer::receiveMessage(int clientfd) {
+	char buffer[512];
+	int n = recv(clientfd, buffer, sizeof(buffer), 0);
+	if (n < 0) {
+		throw std::runtime_error("Error: recv() failed");
+	}
+	else if (n == 0) {
+		close(clientfd);
+		this->_clients.erase(clientfd);
+	}
+	else {
+		buffer[n] = '\0';
+		std::cout << "Message received from " << clientfd << ": " << buffer << std::endl;
 	}
 }
 
