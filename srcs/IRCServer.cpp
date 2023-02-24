@@ -1,4 +1,5 @@
 #include "../hdrs/IRCServer.hpp"
+#include "../hdrs/ircserv.hpp"
 
 // Constructor
 IRCServer::IRCServer(int port,  const char* password):
@@ -7,45 +8,65 @@ IRCServer::IRCServer(int port,  const char* password):
 
 
 void IRCServer::start() {
-    // Create a socket
-    this->_sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    if (this->_sockfd < 0) {
-        std::cerr << "Error: socket() failed" << std::endl;
-        exit(1);
-    }
 
-
-    bzero(this->_sockaddr.sin_zero, sizeof(this->_sockaddr.sin_zero));
-    this->_sockaddr.sin_family = AF_INET;
-    this->_sockaddr.sin_port = htons(this->_port);
-    this->_sockaddr.sin_addr.s_addr = htonl(INADDR_ANY);
-    
+	// Create a socket
+	this->_mainSock = socket(AF_INET, SOCK_STREAM, 0);
+	if (this->_mainSock < 0) {
+		std::cerr << "Error: socket() failed" << std::endl;
+		exit (EXIT_FAILURE);
+	}
+	this->_fds.push_back((struct pollfd){this->_mainSock, POLLIN, 0});
 
 	// Bind the socket to the port
-    if (bind(this->_sockfd, (struct sockaddr *)&this->_sockaddr, sizeof(this->_sockaddr)) < 0) {
-        std::cerr << "Error: bind() failed" << std::endl;
-        exit(1);
-    }
-    
-    // Listen for connections
-    if (listen(this->_sockfd, 5) < 0) {
-        std::cerr << "Error: listen() failed" << std::endl;
-        exit(1);
-    }
+	struct sockaddr_in _sockaddr;
+	_sockaddr.sin_family = AF_INET;							// host byte order
+	_sockaddr.sin_addr.s_addr = htonl(INADDR_ANY);			// automatically fill with my IP address
+	// _sockaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+	// if (_sockaddr.sin_addr.s_addr == INADDR_NONE) {
+	// 	std::cerr << "Error: inet_addr() failed" << std::endl;
+	// 	exit (EXIT_FAILURE);
+	// }
+	_sockaddr.sin_port = htons(this->_port);				// short, network byte order
+	bzero(_sockaddr.sin_zero, sizeof(_sockaddr.sin_zero));	// zero the rest of the struct
+	if (bind(this->_mainSock, (struct sockaddr *)&_sockaddr, sizeof(_sockaddr)) < 0) {
+		std::cerr << "Error: bind() failed" << std::endl;
+		exit (EXIT_FAILURE);
+	}
+	
+	// Listen for connections
+	if (listen(this->_mainSock, 5) < 0) {
+		std::cerr << "Error: listen() failed" << std::endl;
+		exit(EXIT_FAILURE);
+	}
 
-	// Accept connections
-    while (1) {
-        int clientfd = accept(this->_sockfd, NULL, NULL);
-        if (clientfd < 0) {
-            std::cerr << "Error: accept() failed" << std::endl;
-            exit(1);
-        }
-        else {
-            std::cout << "New connection on  SERV fd: " << this->_sockfd << "at CLI fd:" << clientfd << std::endl;
-        }
-    }
 
-    // ********la suite c'est copilot qui a mi mais je crois pas qu'on doit faire çadu multithreading
-	// Create a new thread for each connection
-	// Each thread will handle the connection
+	fcntl(this->_mainSock, F_SETFL, O_NONBLOCK);
+	while (true) {
+		// Wait for a activity on one of the sockets
+		poll(this->_fds.data(), this->_fds.size(), -1);
+
+		// Accept the connection
+		try {   
+			this->acceptConnection();
+			std::cout << "New connection on  SERV fd: " << this->_mainSock << " at CLI fd:" << /*this->_clients[0] <<*/ std::endl;
+		}
+		catch (std::exception &e) {
+			std::cerr << e.what() << std::endl;
+		}
+
+	}
+}
+
+void IRCServer::acceptConnection() {
+	struct sockaddr_in clientaddr;
+	socklen_t clientlen = sizeof(clientaddr);
+	int clientfd = accept(this->_mainSock, (struct sockaddr *)&clientaddr, &clientlen);
+	if (clientfd < 0) {
+		throw std::runtime_error("Error: accept() failed");
+	}
+	else {
+		fcntl(clientfd, F_SETFL, O_NONBLOCK);
+		Client client(clientfd);
+		this->_clients.insert(std::pair<int, Client>(clientfd, client));
+	}
 }

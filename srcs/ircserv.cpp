@@ -27,7 +27,7 @@ int main(int ac, char *av[]) {
 
 	// Create the server
 	IRCServer ircserv(port, av[2]);
+
 	// Start the server
 	ircserv.start();
-	// ...
 }
