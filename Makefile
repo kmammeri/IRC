@@ -3,11 +3,13 @@ NAME		=	ircserv
 INC			=	hdrs/ircserv.hpp \
 				hdrs/IRCServer.hpp \
 				hdrs/Client.hpp \
+				hdrs/Channel.hpp \
 				hdrs/utils.hpp
 
 SRCS 		=	srcs/ircserv.cpp \
 				srcs/IRCServer.cpp \
 				srcs/Client.cpp \
+				srcs/Channel.cpp \
 				utils/utils.cpp
 
 

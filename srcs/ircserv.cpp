@@ -29,5 +29,10 @@ int main(int ac, char *av[]) {
 	IRCServer ircserv(port, av[2]);
 
 	// Start the server
-	ircserv.start();
+	try {
+		ircserv.start();
+	}
+	catch(const exception& e) {
+		cerr << e.what() << endl;
+	}
 }
