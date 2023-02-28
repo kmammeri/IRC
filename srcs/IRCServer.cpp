@@ -61,6 +61,7 @@ void IRCServer::start() {
 					
 				}
 				else {
+					cout << "onbest la" << std::endl;
 					try {
 						receiveMessage(this->_fds[i].fd);
 					}
@@ -100,5 +101,6 @@ void IRCServer::acceptConnection() {
 		fcntl(clientfd, F_SETFL, O_NONBLOCK);
 		Client client(clientfd);
 		this->_clients.insert(std::pair<int, Client>(clientfd, client));
+		this->_fds.push_back((struct pollfd){clientfd, POLLIN, 0});
 	}
 }
