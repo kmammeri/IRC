@@ -1,3 +1,9 @@
+#pragma once
+
+#include <string>
+
+using namespace std;
+
 class Client {
 	private:
 		int		_sockfd;

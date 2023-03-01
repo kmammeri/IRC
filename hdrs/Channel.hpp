@@ -1,5 +1,12 @@
-#include <cstring>
+#pragma once
 
+#include <cstring>
+#include <set>
+#include <map>
+
+#include "Client.hpp"
+
+using namespace std;
 
 class Channel {
 	private:
