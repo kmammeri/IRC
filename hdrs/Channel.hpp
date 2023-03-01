@@ -6,13 +6,6 @@
 
 #include "Client.hpp"
 
-enum ChannelMode {
-	PUBLIC = 0,
-	PRIVATE = 1,
-	INVITE_ONLY = 2,
-	PRIVATE_WITH_INVITE = 3,
-};
-
 using namespace std;
 
 class Channel {
@@ -20,11 +13,11 @@ class Channel {
 		string				_name;
 		string				_topic;
 		int					_mode;
-		set<Client>			_usersInChannel;
-		set<Client>			_operatorsInChannel;
+		set<Client>			_users;
+		set<Client>			_operators;
 		set<Client>			_inviteList;
 		
 	public:
-		Channel(/* args */);
+		Channel(string name, int mode);
 		~Channel();
 };

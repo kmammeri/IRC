@@ -3,5 +3,12 @@
 // using namespace std;
 #define DEBUG
 
-# define LEN_MAX	1024
-# define QUEUE_MAX	5
+#define LEN_MAX	1024
+#define QUEUE_MAX	5
+
+enum ChannelMode {
+	PUBLIC = 0,
+	PRIVATE = 1,
+	INVITE_ONLY = 2,
+	PRIVATE_WITH_INVITE = 3,
+};

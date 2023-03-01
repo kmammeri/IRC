@@ -17,6 +17,7 @@
 # include <unistd.h>
 # include "../hdrs/Client.hpp"
 # include "../hdrs/Channel.hpp"
+# include "ACommand.hpp"
 
 using namespace std;
 
@@ -31,13 +32,16 @@ class IRCServer {
 
 		map<int, Client>		_clients;
 		map<string, Channel>	_channels;
+		map<string, ACommand*>	_commands;
 
 	public:
 		IRCServer(int port, const char* password);
-		void start();
-		void acceptConnection();
-		void receiveMessage(int fd);
-		void disconnectClient(int clientfd);
-		void sendToAll(string msg);
-		void stop();
+		void 	start();
+		void 	setCmds();
+		void 	acceptConnection();
+		string	receiveMessage(int fd);
+		void 	disconnectClient(int clientfd);
+		void	sendToAll(string msg);
+		void	parseMessage(int clientfd, string msg);
+		void 	stop();
 };

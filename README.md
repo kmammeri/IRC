@@ -16,3 +16,5 @@ TODO list:
 			::PRIVMSG
 			::MODE -> Opertaor
 			::NOTICE -> (Operator ?) -> Fait pariel que PRIVMSG	
+			::PASS
+			::QUIT ???

@@ -1,8 +1,7 @@
 #include "../hdrs/Channel.hpp"
 
-Channel::Channel(/* args */) {
-}
+Channel::Channel(string name, int mode):
+	_name(name),
+	_mode(mode) {}
 
-Channel::~Channel()
-{
-}
+Channel::~Channel() {}

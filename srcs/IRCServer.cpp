@@ -1,6 +1,7 @@
 
 #include "../hdrs/IRCServer.hpp"
 #include "../hdrs/ircserv.hpp"
+#include "../hdrs/Commands/JoinCmd.hpp"
 
 // Constructor
 IRCServer::IRCServer(int port,  const char* password):
@@ -53,7 +54,7 @@ void IRCServer::start() {
 				}
 				else {
 					try {
-						receiveMessage(this->_fds[i].fd);
+						parseMessage(this->_fds[i].fd, receiveMessage(this->_fds[i].fd));
 					}
 					catch(const exception& e) {
 						cerr << e.what() << endl;
@@ -61,16 +62,51 @@ void IRCServer::start() {
 				}
 			}
 		}
-		try
-		{
-			this->sendToAll("le message est nulll");
-		}
-		catch(const exception& e)
-		{
-			cerr << e.what() << endl;
-		}
+		// try
+		// {
+		// 	this->sendToAll("le message est nulll");
+		// }
+		// catch(const exception& e)
+		// {
+		// 	cerr << e.what() << endl;
+		// }
 		
 	}
+}
+
+void IRCServer::parseMessage(int clientfd, string msg) {
+	(void) clientfd;
+	(void) msg;
+	// this->_commands.find(msg.substr(0, msg.find(" ")))->second->execute(clientfd, msg);
+
+	cout << msg << endl;
+	cout << (msg == "JOIN\n") << endl;
+
+	if (this->_commands.find(msg) != this->_commands.end()) {
+		this->_commands.find(msg)->second->execute(clientfd, msg);
+	}
+	else {
+		cout << "Command not found" << endl;
+	}
+}
+
+void IRCServer::setCmds() {
+	// this->_commands.insert(pair<string, ACommand*>("NICK", new NickCmd()));
+	// this->_commands.insert(pair<string, ACommand*>("USER", new UserCmd()));
+	this->_commands.insert(pair<string, ACommand*>("JOIN\n", new JoinCmd()));
+	// this->_commands.insert(pair<string, ACommand*>("PART", new PartCmd()));
+	// this->_commands.insert(pair<string, ACommand*>("PRIVMSG", new PrivmsgCmd()));
+								// this->_commands.insert(pair<string, ACommand*>("QUIT", new QuitCmd()));
+								// this->_commands.insert(pair<string, ACommand*>("PING", new PingCmd()));
+								// this->_commands.insert(pair<string, ACommand*>("PONG", new PongCmd()));
+	// this->_commands.insert(pair<string, ACommand*>("LIST", new ListCmd()));
+	// this->_commands.insert(pair<string, ACommand*>("NAMES", new NamesCmd()));
+	// this->_commands.insert(pair<string, ACommand*>("TOPIC", new TopicCmd()));
+	// this->_commands.insert(pair<string, ACommand*>("MODE", new ModeCmd()));
+	// this->_commands.insert(pair<string, ACommand*>("KICK", new KickCmd()));
+	// this->_commands.insert(pair<string, ACommand*>("INVITE", new InviteCmd()));
+	// this->_commands.insert(pair<string, ACommand*>("PASS", new PassCmd()));
+	// this->_commands.insert(pair<string, ACommand*>("NOTICE", new NoticeCmd()));
 }
 
 void IRCServer::acceptConnection() {
@@ -88,7 +124,7 @@ void IRCServer::acceptConnection() {
 	}
 }
 
-void IRCServer::receiveMessage(int clientfd) {
+string IRCServer::receiveMessage(int clientfd) {
 	char buffer[LEN_MAX];
 	int n = recv(clientfd, buffer, sizeof(buffer), 0);
 	if (n < 0) {
@@ -102,6 +138,7 @@ void IRCServer::receiveMessage(int clientfd) {
 		buffer[n] = '\0';
 		cout << "Message received from " << clientfd << ": " << buffer << endl;
 	}
+	return string(buffer);
 }
 
 void IRCServer::disconnectClient(int clientfd) {

@@ -1,15 +1,17 @@
-NAME		=	ircserv
+NAME		=	ircserv	
 
 INC			=	hdrs/ircserv.hpp \
 				hdrs/IRCServer.hpp \
 				hdrs/Client.hpp \
 				hdrs/Channel.hpp \
+				hdrs/Commands/JoinCmd.hpp \
 				hdrs/utils.hpp
 
 SRCS 		=	srcs/ircserv.cpp \
 				srcs/IRCServer.cpp \
 				srcs/Client.cpp \
 				srcs/Channel.cpp \
+				srcs/Commands/JoinCmd.cpp \
 				utils/utils.cpp
 
 

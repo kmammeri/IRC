@@ -28,6 +28,8 @@ int main(int ac, char *av[]) {
 	// Create the server
 	IRCServer ircserv(port, av[2]);
 
+	ircserv.setCmds();
+
 	// Start the server
 	try {
 		ircserv.start();
