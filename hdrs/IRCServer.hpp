@@ -27,10 +27,10 @@ class IRCServer {
 		string					_password;
 		
 		int 					_mainSock;
-		map<int, Client>		_clients;
 		vector<struct pollfd>	_fds;
 
-		set<Channel>			_channels;
+		map<int, Client>		_clients;
+		map<string, Channel>	_channels;
 
 	public:
 		IRCServer(int port, const char* password);
@@ -38,4 +38,6 @@ class IRCServer {
 		void acceptConnection();
 		void receiveMessage(int fd);
 		void disconnectClient(int clientfd);
+		void sendToAll(string msg);
+		void stop();
 };

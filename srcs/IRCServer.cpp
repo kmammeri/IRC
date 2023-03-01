@@ -61,6 +61,15 @@ void IRCServer::start() {
 				}
 			}
 		}
+		try
+		{
+			this->sendToAll("le message est nulll");
+		}
+		catch(const exception& e)
+		{
+			cerr << e.what() << endl;
+		}
+		
 	}
 }
 
@@ -104,4 +113,16 @@ void IRCServer::disconnectClient(int clientfd) {
 			break;
 		}
 	}
+}
+
+void IRCServer::sendToAll(string msg) {
+	for (map<int, Client>::iterator it = this->_clients.begin(); it != this->_clients.end(); it++) {
+		if (send(it->first, msg.c_str(), msg.length(), 0) < 0) {
+			throw runtime_error("Error: send() failed");
+		}
+	}
+}
+
+void IRCServer::stop() {
+	close(this->_mainSock);
 }

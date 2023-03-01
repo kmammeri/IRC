@@ -35,4 +35,5 @@ int main(int ac, char *av[]) {
 	catch(const exception& e) {
 		cerr << e.what() << endl;
 	}
+	ircserv.stop();
 }
