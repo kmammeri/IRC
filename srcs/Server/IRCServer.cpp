@@ -2,6 +2,7 @@
 #include "IRCServer.hpp"
 #include "../ircserv.hpp"
 #include "../Commands/Commands.hpp"
+#include "../Input/Input.hpp"
 
 IRCServer::IRCServer(int port,  const char* password, int state):
 	_port(port),
@@ -79,7 +80,8 @@ void IRCServer::start() {
 				}
 				else {
 					try {
-						parseMessage(this->_pollfds[i].fd, receiveMessage(this->_pollfds[i].fd));
+						Input input(receiveMessage(this->_pollfds[i].fd));
+						input.parse();
 					}
 					catch(const exception& e) {
 						cerr << e.what() << endl;
@@ -104,24 +106,6 @@ void IRCServer::_acceptConnection() {
 		this->_clients.push_back(client);
 	}
 }
-
-void IRCServer::parseMessage(int clientfd, string msg) {
-	(void) clientfd;
-	(void) msg;
-	// this->_commands.find(msg.substr(0, msg.find(" ")))->second->execute(clientfd, msg);
-
-	cout << msg << endl;
-	cout << (msg == "JOIN\n") << endl;
-
-	if (this->_commands.find(msg) != this->_commands.end()) {
-		this->_commands.find(msg)->second->execute(clientfd, msg);
-	}
-	else {
-		cout << "Command not found" << endl;
-	}
-}
-
-
 
 string IRCServer::receiveMessage(int clientfd) {
 	char buffer[LEN_MAX];

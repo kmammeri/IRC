@@ -24,7 +24,7 @@ class Channel {
 		~Channel();
 
 		// Getters
-		string						getName() const;
-		string						getTopic() const;
-		int							getMode() const;
+		string	getName() const;
+		string	getTopic() const;
+		int		getMode() const;
 };
