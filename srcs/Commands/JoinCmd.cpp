@@ -1,4 +1,4 @@
-#include "../../hdrs/Commands/JoinCmd.hpp"
+#include "JoinCmd.hpp"
 
 void JoinCmd::execute(int clientfd, string msg) {
 	cout << "JoinCmd::execute(:: " << msg << " ::)" << "on client " << clientfd << endl;

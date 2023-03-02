@@ -1,7 +1,7 @@
 
-#include "../hdrs/IRCServer.hpp"
-#include "../hdrs/ircserv.hpp"
-#include "../hdrs/Commands/JoinCmd.hpp"
+#include "IRCServer.hpp"
+#include "../ircserv.hpp"
+#include "../Commands/JoinCmd.hpp"
 
 // Constructor
 IRCServer::IRCServer(int port,  const char* password):

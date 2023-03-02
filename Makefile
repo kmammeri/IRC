@@ -1,18 +1,20 @@
 NAME		=	ircserv	
 
-INC			=	hdrs/ircserv.hpp \
-				hdrs/IRCServer.hpp \
-				hdrs/Client.hpp \
-				hdrs/Channel.hpp \
-				hdrs/Commands/JoinCmd.hpp \
-				hdrs/utils.hpp
+INC			=	srcs/ircserv.hpp \
+				srcs//Server/IRCServer.hpp \
+				srcs//Client/Client.hpp \
+				srcs/Channel/Channel.hpp \
+				srcs/Commands/ACommand.hpp \
+				srcs/Commands/JoinCmd.hpp \
+				srcs/utils/utils.hpp
 
 SRCS 		=	srcs/ircserv.cpp \
-				srcs/IRCServer.cpp \
-				srcs/Client.cpp \
-				srcs/Channel.cpp \
+				srcs/Server/IRCServer.cpp \
+				srcs/Client/Client.cpp \
+				srcs/Channel/Channel.cpp \
+				srcs/Commands/ACommand.cpp \
 				srcs/Commands/JoinCmd.cpp \
-				utils/utils.cpp
+				srcs/utils/utils.cpp
 
 
 OBJS 		=	${addprefix objs/, ${SRCS:.cpp=.o}}

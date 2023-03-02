@@ -1,4 +1,4 @@
-#include "../hdrs/Client.hpp"
+#include "Client.hpp"
 
 Client::Client(int sockfd): _sockfd(sockfd) {}
 

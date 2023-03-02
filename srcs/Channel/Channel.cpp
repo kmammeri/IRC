@@ -1,4 +1,4 @@
-#include "../hdrs/Channel.hpp"
+#include "Channel.hpp"
 
 Channel::Channel(string name, int mode):
 	_name(name),

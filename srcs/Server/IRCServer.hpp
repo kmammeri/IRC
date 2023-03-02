@@ -15,9 +15,9 @@
 # include <arpa/inet.h>
 # include <fcntl.h>
 # include <unistd.h>
-# include "../hdrs/Client.hpp"
-# include "../hdrs/Channel.hpp"
-# include "ACommand.hpp"
+# include "../Client/Client.hpp"
+# include "../Channel/Channel.hpp"
+# include "../Commands/ACommand.hpp"
 
 using namespace std;
 

@@ -1,13 +1,13 @@
-#include "../hdrs/ircserv.hpp"
-#include "../hdrs/IRCServer.hpp"
-#include "../hdrs/utils.hpp"
+#include "ircserv.hpp"
+#include "Server/IRCServer.hpp"
+#include "utils/utils.hpp"
 
 
 int main(int ac, char *av[]) {
 	
 	// Check number of arguments
 	if (ac != 3) {
-		cout << "Usage: ./ircserv <port> <password>" << endl;
+		cout	<< "Usage: ./ircserv <port> <password>" << endl;
 		return 0;
 	}
 
