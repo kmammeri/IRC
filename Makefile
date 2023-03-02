@@ -11,7 +11,10 @@ SRCS 		=	srcs/ircserv.cpp \
 				srcs/Server/IRCServer.cpp \
 				srcs/Client/Client.cpp \
 				srcs/Channel/Channel.cpp \
-				srcs/Commands/JoinCmd.cpp \
+				srcs/Commands/PASS.cpp \
+				srcs/Commands/USER.cpp \
+				srcs/Commands/NICK.cpp \
+				srcs/Commands/JOIN.cpp \
 				srcs/utils/utils.cpp
 
 

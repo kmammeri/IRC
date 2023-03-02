@@ -8,6 +8,8 @@
 
 using namespace std;
 
+class Client;
+
 class Channel {
 	private:
 		string				_name;

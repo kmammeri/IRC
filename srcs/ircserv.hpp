@@ -12,3 +12,8 @@ enum ChannelMode {
 	INVITE_ONLY = 2,
 	PRIVATE_WITH_INVITE = 3,
 };
+
+enum StateServer {
+	UP,
+	DOWN
+};

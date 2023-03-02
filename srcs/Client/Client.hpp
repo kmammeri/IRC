@@ -7,8 +7,8 @@ using namespace std;
 class Client {
 	private:
 		int		_fd;
-		string	_nickname;
 		string	_username;
+		string	_nickname;
 		bool 	_isAuthentificated;
 
 	public:
