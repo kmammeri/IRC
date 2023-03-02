@@ -9,3 +9,8 @@ class ACommand {
 	public:
 		virtual void execute(int clientfd, string msg) = 0;
 };
+
+class JOIN: public ACommand {
+	public:
+		virtual void execute(int clientfd, string msg);
+};

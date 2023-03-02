@@ -4,6 +4,7 @@ liens utils pour la mise en place du serveur:
 TODO list:
 	- s'authentifier avec le mot de pass
 	- recevoir et parser les messages
+	- concatener si besoin les messages :: overflow et ^D
 	- bien repondre en fonction de ce qu'on recoit
 	- faire les commandes 
 			::JOIN

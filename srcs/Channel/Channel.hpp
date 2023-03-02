@@ -1,7 +1,7 @@
 #pragma once
 
 #include <cstring>
-#include <set>
+#include <vector>
 #include <map>
 
 #include "../Client/Client.hpp"
@@ -13,11 +13,16 @@ class Channel {
 		string				_name;
 		string				_topic;
 		int					_mode;
-		set<Client>			_users;
-		set<Client>			_operators;
-		set<Client>			_inviteList;
+		map<string, Client>	_users;
+		map<string, Client>	_operators;
+		map<string, Client>	_inviteList;
 		
 	public:
 		Channel(string name, int mode);
 		~Channel();
+
+		// Getters
+		string						getName() const;
+		string						getTopic() const;
+		int							getMode() const;
 };

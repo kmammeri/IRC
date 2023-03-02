@@ -11,13 +11,12 @@
 # include <strings.h>
 # include <poll.h>
 # include <vector>
-# include <set>
 # include <arpa/inet.h>
 # include <fcntl.h>
 # include <unistd.h>
 # include "../Client/Client.hpp"
 # include "../Channel/Channel.hpp"
-# include "../Commands/ACommand.hpp"
+# include "../Commands/Commands.hpp"
 
 using namespace std;
 
@@ -28,9 +27,9 @@ class IRCServer {
 		string					_password;
 		
 		int 					_mainSock;
-		vector<struct pollfd>	_fds;
+		vector<struct pollfd>	_pollfds;
 
-		map<int, Client>		_clients;
+		vector<Client>			_clients;
 		map<string, Channel>	_channels;
 		map<string, ACommand*>	_commands;
 
@@ -39,9 +38,14 @@ class IRCServer {
 		void 	start();
 		void 	setCmds();
 		void 	acceptConnection();
+		void 	authentification(int clientfd);
 		string	receiveMessage(int fd);
 		void 	disconnectClient(int clientfd);
 		void	sendToAll(string msg);
 		void	parseMessage(int clientfd, string msg);
 		void 	stop();
+
+		// Getters
+		vector<Client>::const_iterator	getClient(int fd) const;
+		vector<Client>::const_iterator	getClient(string username) const;
 };

@@ -6,11 +6,17 @@ using namespace std;
 
 class Client {
 	private:
-		int		_sockfd;
+		int		_fd;
 		string	_nickname;
 		string	_username;
-	
+		bool 	_isAuthentificated;
+
 	public:
-		Client(int sockfd);
+		Client(int fd, bool isAuth);
 		~Client();
+
+		int		getFd() const;
+		string	getNickname() const;
+		string	getUsername() const;
+		bool	isAuthentificated() const;
 };
