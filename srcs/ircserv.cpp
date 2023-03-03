@@ -2,7 +2,6 @@
 #include "Server/IRCServer.hpp"
 #include "utils/utils.hpp"
 
-
 int main(int ac, char *av[]) {
 	
 	// Check number of arguments
@@ -34,5 +33,4 @@ int main(int ac, char *av[]) {
 	catch(const exception& e) {
 		cerr << e.what() << endl;
 	}
-	ircserv.stop();
 }

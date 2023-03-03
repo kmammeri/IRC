@@ -11,15 +11,16 @@ using namespace std;
 class Input {
 	private:
  		string			_rawInput;
-		vector<string>	_parsedInput;
-		Client const & 	_fromClient;
+		vector<string>	_command;
 
 	public:
-		Input(string rawInput, Client const & client);
+		Input(string rawInput);
 
-		void			parse();
-		void 			printParsedInput();
+		void			cut();
+		void 			printCommand() const;
+		bool			empty() const;
+		void 			clear();
 
-		string			getRawInput() const;
-		vector<string>	getParsedInput() const;
+		string const &			getRawInput() const;
+		vector<string> const &	getCommand() const;
 };

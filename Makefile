@@ -23,7 +23,7 @@ SRCS 		=	srcs/ircserv.cpp \
 OBJS 		=	${addprefix objs/, ${SRCS:.cpp=.o}}
 
 CC 			=	c++
-CFLAGS		=	-Wall -Werror -Wextra -std=c++98 #-pedantic -O3
+CFLAGS		=	-Wall -Werror -Wextra -std=c++98 -fsanitize=address #-pedantic -O3
 RM 			=	rm -rf
 
 objs/%.o: 	%.cpp ${INC} Makefile

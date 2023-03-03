@@ -1,7 +1,8 @@
 
 #include "Commands.hpp"
 
-void NICK::execute(int clientfd, string msg) {
-	cout << "NICK::execute(:: " << msg << " ::)" << "on client " << clientfd << endl;
+void NICK::execute(Input const & cmd, Client const & cli) {
+	cout << "NICK::execute(:: " << cmd.getCommand().front() << " ::)" << "on client " << cli.getFd() << endl;
+
 	// do something
 }

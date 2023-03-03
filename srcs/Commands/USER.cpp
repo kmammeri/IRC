@@ -1,7 +1,8 @@
 
 #include "Commands.hpp"
 
-void USER::execute(int clientfd, string msg) {
-	cout << "USER::execute(:: " << msg << " ::)" << "on client " << clientfd << endl;
+void USER::execute(Input const & cmd, Client const & cli) {
+	cout << "USER::execute(:: " << cmd.getCommand().front() << " ::)" << "on client " << cli.getFd() << endl;
+
 	// do something
 }

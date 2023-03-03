@@ -72,7 +72,6 @@ void IRCServer::start() {
 				if (this->_pollfds[i].fd == this->_mainSock) {
 					try	{
 						this->_acceptConnection();
-						cout << "New connection on SERV" << endl;
 					}
 					catch(const exception& e) {
 						cerr << e.what() << endl;
@@ -80,9 +79,28 @@ void IRCServer::start() {
 				}
 				else {
 					try {
-						Input input(receiveMessage(this->_pollfds[i].fd), *getClient(this->_pollfds[i].fd));
-						input.parse();
-						input.printParsedInput();
+
+						// check if client corresponding to pollfd is in vector
+						if (getClient(this->_pollfds[i].fd) == this->_clients.end())
+							throw runtime_error("Error: Client not found in vector");
+						Client client = *getClient(this->_pollfds[i].fd);
+
+						// check message of client
+						Input input(receiveMessage(this->_pollfds[i].fd));
+						input.cut();
+						input.printCommand();
+						if (input.empty()) {
+							input.clear();
+							cout << "Empty input" << endl;
+							continue;
+						}
+
+						// check if command is valid
+						if (this->_commands.find(input.getCommand().front()) != this->_commands.end())
+							this->_commands[input.getCommand().front()]->execute(input, *getClient(this->_pollfds[i].fd));
+						else
+							cout << "Command not found" << endl;
+						input.clear();
 					}
 					catch(const exception& e) {
 						cerr << e.what() << endl;
@@ -90,9 +108,11 @@ void IRCServer::start() {
 				}
 			}
 		}
+		cout << "========================================" << endl;
 	}
 }
 
+// Create a new  unauthentificate client and add it to the clients vector
 void IRCServer::_acceptConnection() {
 	struct sockaddr_in clientaddr;
 	socklen_t clientlen = sizeof(clientaddr);
@@ -105,6 +125,7 @@ void IRCServer::_acceptConnection() {
 		Client client(clientfd, false);
 		this->_pollfds.push_back((struct pollfd){clientfd, POLLIN, 0});
 		this->_clients.push_back(client);
+		cout << "New connection on SERV on socketfd: " << clientfd << endl;
 	}
 }
 
@@ -115,12 +136,12 @@ string IRCServer::receiveMessage(int clientfd) {
 		throw runtime_error("Error: recv() failed");
 	}
 	else if (n == 0) {
-		cout << "Client " << clientfd << " disconnected" << endl;
 		disconnectClient(clientfd);
 	}
 	else {
 		buffer[n] = '\0';
 	}
+	cout << "Received raw message from client " << clientfd << ": " << buffer << endl;
 	return string(buffer);
 }
 
@@ -138,10 +159,8 @@ void IRCServer::disconnectClient(int clientfd) {
 			break;
 		}
 	}
-}
+	cout << "Client " << clientfd << " disconnected" << endl;
 
-void IRCServer::stop() {
-	close(this->_mainSock);
 }
 
 

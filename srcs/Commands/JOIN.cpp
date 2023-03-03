@@ -1,6 +1,7 @@
 #include "Commands.hpp"
 
-void JOIN::execute(int clientfd, string msg) {
-	cout << "JOIN::execute(:: " << msg << " ::)" << "on client " << clientfd << endl;
+void JOIN::execute(Input const & cmd, Client const & cli) {
+	cout << "JOIN::execute(:: " << cmd.getCommand().front() << " ::)" << "on client " << cli.getFd() << endl;
+
 	// do something
 }

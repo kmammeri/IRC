@@ -46,12 +46,11 @@ class IRCServer {
 	public:
 		IRCServer(int port, const char* password, int state);
 		void 	start();
-		void 	authentification(int clientfd);
 		string	receiveMessage(int fd);
 		void 	disconnectClient(int clientfd);
 		void	sendToAll(string msg);
 		void	parseMessage(int clientfd, string msg);
-		void 	stop();
+
 
 		// Getters
 
