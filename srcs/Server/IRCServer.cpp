@@ -80,8 +80,9 @@ void IRCServer::start() {
 				}
 				else {
 					try {
-						Input input(receiveMessage(this->_pollfds[i].fd));
+						Input input(receiveMessage(this->_pollfds[i].fd), *getClient(this->_pollfds[i].fd));
 						input.parse();
+						input.printParsedInput();
 					}
 					catch(const exception& e) {
 						cerr << e.what() << endl;
@@ -119,7 +120,6 @@ string IRCServer::receiveMessage(int clientfd) {
 	}
 	else {
 		buffer[n] = '\0';
-		cout << "Message received from " << clientfd << ": " << buffer << endl;
 	}
 	return string(buffer);
 }
