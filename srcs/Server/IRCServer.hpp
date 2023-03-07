@@ -40,20 +40,19 @@ class IRCServer {
 		map<string, ACommand*>	_commands;
 
 		void 	_init();
-		void 	_setCmds();
+		void 	_setCmdsBank();
 		void 	_acceptConnection();
+		bool	_tryAuthentification(Input const & input, Client *cli, IRCServer & serv);
 
 	public:
 		IRCServer(int port, const char* password, int state);
 		void 	start();
 		string	receiveMessage(int fd);
 		void 	disconnectClient(int clientfd);
-		void	sendToAll(string msg);
-		void	parseMessage(int clientfd, string msg);
-
 
 		// Getters
+		Client *		getClient(int fd);
+		Client * 		getClient(string username);
+		string const &	getPassword() const;
 
-		vector<Client>::const_iterator	getClient(int fd) const;
-		vector<Client>::const_iterator	getClient(string username) const;
 };

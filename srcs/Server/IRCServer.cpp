@@ -4,11 +4,14 @@
 #include "../Commands/Commands.hpp"
 #include "../Input/Input.hpp"
 
+// Constructors
+
 IRCServer::IRCServer(int port,  const char* password, int state):
 	_port(port),
 	_password(password), 
 	_state(state) {}
 
+// Memnber functions
 
 void IRCServer::_init() {
 
@@ -37,11 +40,11 @@ void IRCServer::_init() {
 	fcntl(this->_mainSock, F_SETFL, O_NONBLOCK);
 }
 
-void IRCServer::_setCmds() {
+void IRCServer::_setCmdsBank() {
 	this->_commands.insert(pair<string, ACommand*>("PASS", new PASS()));
-	this->_commands.insert(pair<string, ACommand*>("USER", new USER()));
-	this->_commands.insert(pair<string, ACommand*>("NICK", new NICK()));
-	this->_commands.insert(pair<string, ACommand*>("JOIN", new JOIN()));
+	// this->_commands.insert(pair<string, ACommand*>("USER", new USER()));
+	// this->_commands.insert(pair<string, ACommand*>("NICK", new NICK()));
+	// this->_commands.insert(pair<string, ACommand*>("JOIN", new JOIN()));
 	// this->_commands.insert(pair<string, ACommand*>("PART", new PART()));
 	// this->_commands.insert(pair<string, ACommand*>("PRIVMSG", new PRIVMSG()));
 	// this->_commands.insert(pair<string, ACommand*>("QUIT", new QUIT()));
@@ -59,13 +62,13 @@ void IRCServer::_setCmds() {
 void IRCServer::start() {
 
 	this->_init();
-	this->_setCmds();
+	this->_setCmdsBank();
 
 	while (this->_state == UP) {
 		// Wait for a activity on one of the sockets
 		poll(this->_pollfds.data(), this->_pollfds.size(), -1);
 
-		// If something happened on the main socket, then it's an incoming connection
+		// When something happened on the main socket, then it's an incoming connection
 		// else it's a message from a client
 		for (size_t i = 0; i < this->_pollfds.size(); i++) {
 			if (this->_pollfds[i].revents & POLLIN) {
@@ -80,27 +83,31 @@ void IRCServer::start() {
 				else {
 					try {
 
-						// check if client corresponding to pollfd is in vector
-						if (getClient(this->_pollfds[i].fd) == this->_clients.end())
+						// get Client and check if there is a client corresponding to pollfd in vector
+						Client *client = getClient(this->_pollfds[i].fd);
+						if (client == NULL)
 							throw runtime_error("Error: Client not found in vector");
-						Client client = *getClient(this->_pollfds[i].fd);
 
-						// check message of client
+						// tokenise and check if message of client is empty
 						Input input(receiveMessage(this->_pollfds[i].fd));
-						input.cut();
-						input.printCommand();
+						input.printTokens();
 						if (input.empty()) {
-							input.clear();
 							cout << "Empty input" << endl;
 							continue;
 						}
+						if (_tryAuthentification(input, client, *this) == false) {
+							cout << "Authentification failed" << endl;
+							disconnectClient(client->getFd());
+							continue;
+						}
+						else
+							client->setAuthentification(true);
 
-						// check if command is valid
-						if (this->_commands.find(input.getCommand().front()) != this->_commands.end())
-							this->_commands[input.getCommand().front()]->execute(input, *getClient(this->_pollfds[i].fd));
+						// check if command is valid in the map of commands ad execute it
+						if (this->_commands.find(input.getTokens().front()) != this->_commands.end())
+							this->_commands[input.getTokens().front()]->execute(input, client, *this);
 						else
 							cout << "Command not found" << endl;
-						input.clear();
 					}
 					catch(const exception& e) {
 						cerr << e.what() << endl;
@@ -112,7 +119,7 @@ void IRCServer::start() {
 	}
 }
 
-// Create a new  unauthentificate client and add it to the clients vector
+// Create a new unauthentificate client and add it to the clients vector and pollfds vector
 void IRCServer::_acceptConnection() {
 	struct sockaddr_in clientaddr;
 	socklen_t clientlen = sizeof(clientaddr);
@@ -127,6 +134,36 @@ void IRCServer::_acceptConnection() {
 		this->_clients.push_back(client);
 		cout << "New connection on SERV on socketfd: " << clientfd << endl;
 	}
+}
+
+bool IRCServer::_tryAuthentification(Input const & input, Client *cli, IRCServer &serv) {
+	if (cli->isAuthentificated() == false) {
+		if (input.getTokens().front() == "PASS") {
+			if (serv._commands.find(input.getTokens().front()) != this->_commands.end())
+				return (serv._commands[input.getTokens().front()]->execute(input, cli, serv));
+			else
+				throw runtime_error("Error: Command PASS not found in map of commands");
+		}
+		return false;
+	}
+	return true;
+}
+
+void IRCServer::disconnectClient(int clientfd) {
+	close(clientfd);
+	for (size_t i = 0; i < this->_clients.size(); i++) {
+		if (this->_clients[i].getFd() == clientfd) {
+			this->_clients.erase(this->_clients.begin() + i);
+			break;
+		}
+	}
+	for (size_t i = 0; i < this->_pollfds.size(); i++) {
+		if (this->_pollfds[i].fd == clientfd) {
+			this->_pollfds.erase(this->_pollfds.begin() + i);
+			break;
+		}
+	}
+	cout << "Client " << clientfd << " disconnected" << endl;
 }
 
 string IRCServer::receiveMessage(int clientfd) {
@@ -145,40 +182,26 @@ string IRCServer::receiveMessage(int clientfd) {
 	return string(buffer);
 }
 
-void IRCServer::disconnectClient(int clientfd) {
-	close(clientfd);
-	for (size_t i = 0; i < this->_clients.size(); i++) {
-		if (this->_clients[i].getFd() == clientfd) {
-			this->_clients.erase(this->_clients.begin() + i);
-			break;
-		}
-	}
-	for (size_t i = 0; i < this->_pollfds.size(); i++) {
-		if (this->_pollfds[i].fd == clientfd) {
-			this->_pollfds.erase(this->_pollfds.begin() + i);
-			break;
-		}
-	}
-	cout << "Client " << clientfd << " disconnected" << endl;
-
-}
-
-
 // Getters
-vector<Client>::const_iterator IRCServer::getClient(int fd) const {
-	for (vector<Client>::const_iterator it = this->_clients.begin(); it != this->_clients.end(); it++) {
+
+Client * IRCServer::getClient(int fd) {
+	for (vector<Client>::iterator it = this->_clients.begin(); it != this->_clients.end(); it++) {
 		if (it->getFd() == fd) {
-			return it;
+			return (&(*it));
 		}
 	}
-	return this->_clients.end();
+	return NULL;
 }
 
-vector<Client>::const_iterator IRCServer::getClient(string username) const {
-	for (vector<Client>::const_iterator it = this->_clients.begin(); it != this->_clients.end(); it++) {
+Client * IRCServer::getClient(string username) {
+	for (vector<Client>::iterator it = this->_clients.begin(); it != this->_clients.end(); it++) {
 		if (it->getUsername() == username) {
-			return it;
+			return (&(*it));
 		}
 	}
-	return this->_clients.end();
+	return NULL;
+}
+
+string const & IRCServer::getPassword() const {
+	return this->_password;
 }

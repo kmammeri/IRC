@@ -1,15 +1,24 @@
 #include "Input.hpp"
-#include <iostream>
 
-Input::Input(string strInput):
- 	_rawInput(strInput) {}
+// Constructors
 
-void Input::cut() {
+Input::Input(string strInput): _rawInput(strInput) {
+	this->_tokenise();
+}
+
+Input::~Input() {
+	this->_rawInput.clear();
+	this->_tokens.clear();
+}
+
+// Setters
+
+void Input::_tokenise() {
 	size_t i1 = 0;
 	while (this->_rawInput[i1] == ' ') {
 		i1++;
 	}
-	this->_command.clear();
+	this->_tokens.clear();
 	for (size_t i2 = i1; i2 < this->_rawInput.size(); i2++) {
 		if (this->_rawInput[i2] == ' ' || this->_rawInput[i2] == '\n' || this->_rawInput[i2] == '\r') {
 			string tmp(this->_rawInput, i1, i2 - i1);
@@ -18,7 +27,7 @@ void Input::cut() {
 			if (tmp[tmp.size() - 1] == '\r')
 				tmp.erase(tmp.size() - 1);
 			if(!tmp.empty())
-				this->_command.push_back(tmp);
+				this->_tokens.push_back(tmp);
 			while (this->_rawInput[i2] == ' ')
 				i2++;
 			i1 = i2;
@@ -26,11 +35,13 @@ void Input::cut() {
 	}
 }
 
-void Input::printCommand() const {
+// Getters
+
+void Input::printTokens() const {
 	cout << "Message tokenised give: ";
-	for (size_t i = 0; i < this->_command.size(); i++) {
-		cout << this->_command[i];
-		if (i < (this->_command.size() - 1)) {
+	for (size_t i = 0; i < this->_tokens.size(); i++) {
+		cout << this->_tokens[i];
+		if (i < (this->_tokens.size() - 1)) {
 			cout << " ";
 		}
 	}
@@ -38,18 +49,13 @@ void Input::printCommand() const {
 }
 
 bool Input::empty() const {
-	return this->_command.empty();
+	return this->_tokens.empty();
 }
 
 string const & Input::getRawInput() const {
 	return this->_rawInput;
 }
 
-vector<string> const & Input::getCommand() const {
-	return this->_command;
-}
-
-void Input::clear() {
-	this->_rawInput.clear();
-	this->_command.clear();
+vector<string> const & Input::getTokens() const {
+	return this->_tokens;
 }
