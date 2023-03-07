@@ -100,8 +100,10 @@ void IRCServer::start() {
 							disconnectClient(client->getFd());
 							continue;
 						}
-						else
+						else {
 							client->setAuthentification(true);
+							continue;
+						}
 
 						// check if command is valid in the map of commands ad execute it
 						if (this->_commands.find(input.getTokens().front()) != this->_commands.end())

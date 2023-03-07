@@ -25,8 +25,8 @@ void Client::setNickname(string const & nickname) {
 	this->_nickname = nickname;
 }
 
-void Client::setAuthentification(bool isAuth) {
-	this->_isAuthentificated = isAuth;
+void Client::setAuthentification(bool Auth) {
+	this->_isAuthentificated = Auth;
 }
 
 // Getters

@@ -9,7 +9,7 @@ bool PASS::execute(Input const & cmd, Client * cli, IRCServer & serv) {
 	}
 	if (cmd.getTokens().size() < 2) {
 		cli->sendReply("461", "Not enough parameters");
-		return true;
+		return false;
 	}
 	if (cmd.getTokens().size() == 2) {
 		if (cmd.getTokens()[1] == serv.getPassword()) {
@@ -17,5 +17,5 @@ bool PASS::execute(Input const & cmd, Client * cli, IRCServer & serv) {
 			return true;
 		}
 	}
-	return true;
+	return false;
 }

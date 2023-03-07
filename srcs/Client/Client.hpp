@@ -26,7 +26,7 @@ class Client {
 		// Setters
 		void 	setUsername(string const & username);
 		void 	setNickname(string const & nickname);
-		void 	setAuthentification(bool isAuth);
+		void 	setAuthentification(bool Auth);
 
 		// Getters
 		int				getFd() const;
