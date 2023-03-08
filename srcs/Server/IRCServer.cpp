@@ -44,7 +44,7 @@ void IRCServer::_setCmdsBank() {
 	this->_commands.insert(pair<string, ACommand*>("PASS", new PASS()));
 	this->_commands.insert(pair<string, ACommand*>("USER", new USER()));
 	this->_commands.insert(pair<string, ACommand*>("NICK", new NICK()));
-	// this->_commands.insert(pair<string, ACommand*>("JOIN", new JOIN()));
+	this->_commands.insert(pair<string, ACommand*>("JOIN", new JOIN()));
 	// this->_commands.insert(pair<string, ACommand*>("PART", new PART()));
 	// this->_commands.insert(pair<string, ACommand*>("PRIVMSG", new PRIVMSG()));
 	// this->_commands.insert(pair<string, ACommand*>("QUIT", new QUIT()));
@@ -125,17 +125,20 @@ void IRCServer::_acceptConnection() {
 }
 
 void IRCServer::_registrationProced() const {
-	
+	cout << "LE CLIENT EST REGISTER" << endl;
 }
 
 void IRCServer::_performCommand(Input const & input, Client *cli) {
 
 	if (cli->isRegistered() == false && !(input.getTokens().front() == "PASS" || input.getTokens().front() == "USER" || input.getTokens().front() == "NICK")) {
+		cout << "Error: You must be authentificated first" << endl;
 		disconnectClient(cli->getFd());
-		throw runtime_error("Error: You must be authentificated to use this command\n");
+		return ;
 	}
-	if (this->_commands.find(input.getTokens().front()) == this->_commands.end())
-		throw runtime_error("Error: Command not found in map of commands\n");
+	if (this->_commands.find(input.getTokens().front()) == this->_commands.end()) {
+		cout << "Error: Command not found in map of commands" << endl;
+		return ;
+	}
 	this->_commands[input.getTokens().front()]->execute(input, cli, *this);
 	if (cli->isRegistered() == false) {
 		if (cli->getNickname() != "" && cli->getUsername() != "" && cli->isAuthentificated() == true) {

@@ -33,7 +33,7 @@ class NICK: public ACommand {
 		virtual bool execute(Input const & cmd, Client * cli, IRCServer & serv);
 };
 
-// class JOIN: public ACommand {
-// 	public:
-// 		virtual void execute(Input const & cmd, Client const &);
-// };
+class JOIN: public ACommand {
+	public:
+		virtual bool execute(Input const & cmd, Client * cli, IRCServer & serv);
+};

@@ -1,7 +1,8 @@
-// #include "Commands.hpp"
+#include "Commands.hpp"
 
-// void JOIN::execute(Input const & cmd, Client const & cli) {
-// 	cout << "JOIN::execute(:: " << cmd.getTokens().front() << " ::)" << "on client " << cli.getFd() << endl;
-
-// 	// do something
-// }
+bool JOIN::execute(Input const & cmd, Client * cli, IRCServer & serv) {
+	cout << "JOIN::execute(:: " << cmd.getTokens().front() << " ::)" << "on client " << cli->getFd() << endl;
+	(void)serv;
+	return true;
+	// do something
+}
