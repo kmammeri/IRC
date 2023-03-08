@@ -42,7 +42,7 @@ void IRCServer::_init() {
 
 void IRCServer::_setCmdsBank() {
 	this->_commands.insert(pair<string, ACommand*>("PASS", new PASS()));
-	// this->_commands.insert(pair<string, ACommand*>("USER", new USER()));
+	this->_commands.insert(pair<string, ACommand*>("USER", new USER()));
 	// this->_commands.insert(pair<string, ACommand*>("NICK", new NICK()));
 	// this->_commands.insert(pair<string, ACommand*>("JOIN", new JOIN()));
 	// this->_commands.insert(pair<string, ACommand*>("PART", new PART()));
@@ -95,16 +95,19 @@ void IRCServer::start() {
 							cout << "Empty input" << endl;
 							continue;
 						}
-						if (_tryAuthentification(input, client, *this) == false) {
-							cout << "Authentification failed" << endl;
-							disconnectClient(client->getFd());
-							continue;
-						}
-						else {
-							client->setAuthentification(true);
-							continue;
-						}
 
+						// if client is not authentificated, try to authentificate him
+						if (client->isAuthentificated() == false) {
+							if (_tryAuthentification(input, client, *this) == false) {
+								cout << "Authentification failed" << endl;
+								disconnectClient(client->getFd());
+								continue;
+							}
+							else {
+								client->setAuthentification(true);
+								continue;
+							}
+						}
 						// check if command is valid in the map of commands ad execute it
 						if (this->_commands.find(input.getTokens().front()) != this->_commands.end())
 							this->_commands[input.getTokens().front()]->execute(input, client, *this);
