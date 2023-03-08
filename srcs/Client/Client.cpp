@@ -1,6 +1,9 @@
 #include "Client.hpp"
 
-Client::Client(int fd, bool isAuth): _fd(fd), _isAuthentificated(isAuth) {}
+Client::Client(int fd):
+	_fd(fd), 
+	_isAuthentificated(false),
+	_isRegistered(false) {}
 
 Client::~Client() {}
 
@@ -25,8 +28,12 @@ void Client::setNickname(string const & nickname) {
 	this->_nickname = nickname;
 }
 
-void Client::setAuthentification(bool Auth) {
-	this->_isAuthentificated = Auth;
+void Client::setAuthentification(bool auth) {
+	this->_isAuthentificated = auth;
+}
+
+void Client::setRegistration(bool reg) {
+	this->_isRegistered = reg;
 }
 
 // Getters
@@ -45,4 +52,8 @@ string const & Client::getUsername() const {
 
 bool Client::isAuthentificated() const {
 	return this->_isAuthentificated;
+}
+
+bool Client::isRegistered() const {
+	return this->_isRegistered;
 }

@@ -2,7 +2,19 @@
 #include "Commands.hpp"
 
 bool USER::execute(Input const & cmd, Client * cli, IRCServer & serv) {
-	cout << "USER::execute(:: " << cmd.getTokens().front() << " ::)" << "on client " << cli->getFd() << endl;
+	
+	if (cli->getUsername() != "" || cli->isRegistered()) {
+		cli->sendReply("462", "You are already registered");
+		return true;
+	}
+	if (cmd.getTokens().size() < 2) {
+		cli->sendReply("461", "Not enough parameters");
+		return false;
+	}
+	if (cmd.getTokens().size() >= 2) {
+		cli->setUsername(cmd.getTokens()[1]);
+		return true;
+	}
 	(void)serv;
-	return true;
+	return false;
 }

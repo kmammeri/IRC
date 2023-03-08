@@ -43,7 +43,7 @@ void IRCServer::_init() {
 void IRCServer::_setCmdsBank() {
 	this->_commands.insert(pair<string, ACommand*>("PASS", new PASS()));
 	this->_commands.insert(pair<string, ACommand*>("USER", new USER()));
-	// this->_commands.insert(pair<string, ACommand*>("NICK", new NICK()));
+	this->_commands.insert(pair<string, ACommand*>("NICK", new NICK()));
 	// this->_commands.insert(pair<string, ACommand*>("JOIN", new JOIN()));
 	// this->_commands.insert(pair<string, ACommand*>("PART", new PART()));
 	// this->_commands.insert(pair<string, ACommand*>("PRIVMSG", new PRIVMSG()));
@@ -95,27 +95,10 @@ void IRCServer::start() {
 							cout << "Empty input" << endl;
 							continue;
 						}
-
-						// if client is not authentificated, try to authentificate him
-						if (client->isAuthentificated() == false) {
-							if (_tryAuthentification(input, client, *this) == false) {
-								cout << "Authentification failed" << endl;
-								disconnectClient(client->getFd());
-								continue;
-							}
-							else {
-								client->setAuthentification(true);
-								continue;
-							}
-						}
-						// check if command is valid in the map of commands ad execute it
-						if (this->_commands.find(input.getTokens().front()) != this->_commands.end())
-							this->_commands[input.getTokens().front()]->execute(input, client, *this);
-						else
-							cout << "Command not found" << endl;
+						_performCommand(input, client);
 					}
 					catch(const exception& e) {
-						cerr << e.what() << endl;
+						cerr << e.what();
 					}
 				}
 			}
@@ -130,28 +113,36 @@ void IRCServer::_acceptConnection() {
 	socklen_t clientlen = sizeof(clientaddr);
 	int clientfd = accept(this->_mainSock, (struct sockaddr *)&clientaddr, &clientlen);
 	if (clientfd < 0) {
-		throw runtime_error("Error: accept() failed");
+		throw runtime_error("Error: accept() failed\n");
 	}
 	else {
 		fcntl(clientfd, F_SETFL, O_NONBLOCK);
-		Client client(clientfd, false);
+		Client client(clientfd);
 		this->_pollfds.push_back((struct pollfd){clientfd, POLLIN, 0});
 		this->_clients.push_back(client);
 		cout << "New connection on SERV on socketfd: " << clientfd << endl;
 	}
 }
 
-bool IRCServer::_tryAuthentification(Input const & input, Client *cli, IRCServer &serv) {
-	if (cli->isAuthentificated() == false) {
-		if (input.getTokens().front() == "PASS") {
-			if (serv._commands.find(input.getTokens().front()) != this->_commands.end())
-				return (serv._commands[input.getTokens().front()]->execute(input, cli, serv));
-			else
-				throw runtime_error("Error: Command PASS not found in map of commands");
-		}
-		return false;
+void IRCServer::_registrationProced() const {
+	
+}
+
+void IRCServer::_performCommand(Input const & input, Client *cli) {
+
+	if (cli->isRegistered() == false && !(input.getTokens().front() == "PASS" || input.getTokens().front() == "USER" || input.getTokens().front() == "NICK")) {
+		disconnectClient(cli->getFd());
+		throw runtime_error("Error: You must be authentificated to use this command\n");
 	}
-	return true;
+	if (this->_commands.find(input.getTokens().front()) == this->_commands.end())
+		throw runtime_error("Error: Command not found in map of commands\n");
+	this->_commands[input.getTokens().front()]->execute(input, cli, *this);
+	if (cli->isRegistered() == false) {
+		if (cli->getNickname() != "" && cli->getUsername() != "" && cli->isAuthentificated() == true) {
+			cli->setRegistration(true);
+			_registrationProced();
+		}
+	}
 }
 
 void IRCServer::disconnectClient(int clientfd) {

@@ -1,8 +1,19 @@
 
-// #include "Commands.hpp"
+#include "Commands.hpp"
 
-// void NICK::execute(Input const & cmd, Client const & cli) {
-// 	cout << "NICK::execute(:: " << cmd.getTokens().front() << " ::)" << "on client " << cli.getFd() << endl;
-
-// 	// do something
-// }
+bool NICK::execute(Input const & cmd, Client * cli, IRCServer & serv) {
+	if (cli->getNickname() != "" || cli->isRegistered()) {
+		cli->sendReply("462", "You are already registered");
+		return true;
+	}
+	if (cmd.getTokens().size() < 2) {
+		cli->sendReply("461", "Not enough parameters");
+		return false;
+	}
+	if (cmd.getTokens().size() >= 2) {
+		cli->setNickname(cmd.getTokens()[1]);
+		return true;
+	}
+	(void)serv;
+	return false;
+}

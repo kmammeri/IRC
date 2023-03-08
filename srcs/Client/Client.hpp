@@ -16,9 +16,10 @@ class Client {
 		string	_username;
 		string	_nickname;
 		bool 	_isAuthentificated;
+		bool	_isRegistered;
 
 	public:
-		Client(int fd, bool isAuth);
+		Client(int fd);
 		~Client();
 
 		void 	sendReply(string const & code, string const & reply) const;
@@ -26,11 +27,13 @@ class Client {
 		// Setters
 		void 	setUsername(string const & username);
 		void 	setNickname(string const & nickname);
-		void 	setAuthentification(bool Auth);
+		void 	setAuthentification(bool auth);
+		void	setRegistration(bool reg);
 
 		// Getters
 		int				getFd() const;
 		string const &	getNickname() const;
 		string const &	getUsername() const;
 		bool			isAuthentificated() const;
+		bool			isRegistered() const;
 };

@@ -42,7 +42,11 @@ class IRCServer {
 		void 	_init();
 		void 	_setCmdsBank();
 		void 	_acceptConnection();
+		void 	_performCommand(Input const & input, Client *cli);
+		void	_registrationProced() const;
+
 		bool	_tryAuthentification(Input const & input, Client *cli, IRCServer & serv);
+		bool	_tryRegistration(Input const & input, Client *cli, IRCServer & serv);
 
 	public:
 		IRCServer(int port, const char* password, int state);
