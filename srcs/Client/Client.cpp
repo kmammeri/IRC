@@ -29,6 +29,14 @@ void Client::setNickname(string const & nickname) {
 	this->_nickname = nickname;
 }
 
+void Client::setRealname(string const & realname) {
+	this->_realname = realname;
+}
+
+void Client::setServername(string const & servername) {
+	this->_servername = servername;
+}
+
 void Client::setAuthentification(bool auth) {
 	this->_isAuthentificated = auth;
 }
@@ -49,6 +57,10 @@ string const & Client::getNickname() const {
 
 string const & Client::getUsername() const {
 	return this->_username;
+}
+
+string const & Client::getServername() const {
+	return this->_servername;
 }
 
 bool Client::isAuthentificated() const {

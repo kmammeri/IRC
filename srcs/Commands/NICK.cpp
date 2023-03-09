@@ -2,6 +2,8 @@
 #include "Commands.hpp"
 
 bool NICK::execute(Input const & cmd, Client * cli, IRCServer & serv) {
+	
+	(void)serv;
 	if (cli->getNickname() != "" || cli->isRegistered()) {
 		cli->sendReply("462 You are already registered");
 		return true;
@@ -10,10 +12,6 @@ bool NICK::execute(Input const & cmd, Client * cli, IRCServer & serv) {
 		cli->sendReply("461 Not enough parameters");
 		return false;
 	}
-	if (cmd.getTokens().size() >= 2) {
-		cli->setNickname(cmd.getTokens()[1]);
-		return true;
-	}
-	(void)serv;
-	return false;
+	cli->setNickname(cmd.getTokens()[1]);
+	return true;
 }

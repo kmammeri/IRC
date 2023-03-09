@@ -19,6 +19,7 @@ class Client {
 		string	_nickname;
 		string 	_realname;
 		string	_hostname;
+		string	_servername;
 		bool 	_isAuthentificated;
 		bool	_isRegistered;
 
@@ -32,6 +33,8 @@ class Client {
 		// Setters
 		void 	setUsername(string const & username);
 		void 	setNickname(string const & nickname);
+		void 	setRealname(string const & realname);
+		void 	setServername(string const & servername);
 		void 	setAuthentification(bool auth);
 		void	setRegistration(bool reg);
 
@@ -43,5 +46,5 @@ class Client {
 		bool			isRegistered() const;
 		string const & 	getRealname() const;
 		string const & 	getHostname() const;
-
+		string const & 	getServername() const;
 };
