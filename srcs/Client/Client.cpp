@@ -1,19 +1,20 @@
 #include "Client.hpp"
 
-Client::Client(int fd):
+Client::Client(int fd, string const & hostname):
 	_fd(fd), 
+	_hostname(hostname),
 	_isAuthentificated(false),
 	_isRegistered(false) {}
 
 Client::~Client() {}
 
-void Client::sendReply(string const & code, string const & reply) const {
-	string msg = ":" + string(SERVER_NAME) + " " + code + " :" + this->_nickname + " " + reply + "\r";
-	int n = send(this->_fd, msg.c_str(), msg.length(), 0);
+void Client::sendReply(string reply) const {
+	reply + "\r\n";
+	int n = send(this->_fd, reply.c_str(), reply.length(), 0);
 	if (n < 0) {
 		throw runtime_error("Error: send() failed");
 	}
-	cout << "Sent message to client " << this->_fd << ": " << msg << endl;
+	cout << "Sent message to client " << this->_fd << ": " << reply << endl;
 
 }
 
@@ -56,4 +57,12 @@ bool Client::isAuthentificated() const {
 
 bool Client::isRegistered() const {
 	return this->_isRegistered;
+}
+
+string const & Client::getRealname() const {
+	return this->_realname;
+}
+
+string const & Client::getHostname() const {
+	return this->_hostname;
 }

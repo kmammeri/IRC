@@ -6,8 +6,7 @@
 #include <sys/socket.h>
 #include <stdexcept>
 #include <iostream>
-// #define SERVER_NAME "irc.42.fr"
-#define SERVER_NAME "test"
+#include "../ircserv.hpp"
 
 
 
@@ -18,14 +17,17 @@ class Client {
 		int		_fd;
 		string	_username;
 		string	_nickname;
+		string 	_realname;
+		string	_hostname;
 		bool 	_isAuthentificated;
 		bool	_isRegistered;
 
+
 	public:
-		Client(int fd);
+		Client(int fd, string const & hostname);
 		~Client();
 
-		void 	sendReply(string const & code, string const & reply) const;
+		void 	sendReply(string reply) const;
 
 		// Setters
 		void 	setUsername(string const & username);
@@ -39,4 +41,7 @@ class Client {
 		string const &	getUsername() const;
 		bool			isAuthentificated() const;
 		bool			isRegistered() const;
+		string const & 	getRealname() const;
+		string const & 	getHostname() const;
+
 };

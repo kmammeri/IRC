@@ -45,7 +45,7 @@ class IRCServer {
 		void 	_setCmdsBank();
 		void 	_acceptConnection();
 		void 	_performCommand(Input const & input, Client *cli);
-		void	_registrationProced() const;
+		void	_registrationProced(Client * cli) const;
 
 		bool	_tryAuthentification(Input const & input, Client *cli, IRCServer & serv);
 		bool	_tryRegistration(Input const & input, Client *cli, IRCServer & serv);

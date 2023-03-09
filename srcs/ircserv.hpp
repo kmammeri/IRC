@@ -4,7 +4,8 @@
 #define DEBUG
 
 #define LEN_MAX	1024
-#define QUEUE_MAX	5
+#define QUEUE_MAX 5
+#define SERVER_NAME "42irc"
 
 enum ChannelMode {
 	PUBLIC = 0,

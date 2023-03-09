@@ -4,11 +4,11 @@
 bool USER::execute(Input const & cmd, Client * cli, IRCServer & serv) {
 	
 	if (cli->getUsername() != "" || cli->isRegistered()) {
-		cli->sendReply("462", "You are already registered");
+		cli->sendReply("462 You are already registered");
 		return true;
 	}
 	if (cmd.getTokens().size() < 2) {
-		cli->sendReply("461", "Not enough parameters");
+		cli->sendReply("461 Not enough parameters");
 		return false;
 	}
 	if (cmd.getTokens().size() >= 2) {

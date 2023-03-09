@@ -1,8 +1,8 @@
-
 #include "IRCServer.hpp"
 #include "../ircserv.hpp"
 #include "../Commands/Commands.hpp"
 #include "../Input/Input.hpp"
+#include "../Client/Client.hpp"
 
 // Constructors
 
@@ -122,16 +122,27 @@ void IRCServer::_acceptConnection() {
 	}
 	else {
 		fcntl(clientfd, F_SETFL, O_NONBLOCK);
-		Client client(clientfd);
+		Client client(clientfd, inet_ntoa(clientaddr.sin_addr));
 		this->_pollfds.push_back((struct pollfd){clientfd, POLLIN, 0});
 		this->_clients.push_back(client);
 		cout << "New connection on SERV on socketfd: " << clientfd << endl;
 	}
 }
 
-void IRCServer::_registrationProced() const {
+void IRCServer::_registrationProced(Client * cli) const {
 
 	cout << "LE CLIENT EST REGISTER" << endl;
+	// cli->sendReply("001 Welcome to the Internet Relay Network " + cli->getNickname() + "!" + cli->getUsername() + "@" + "localhost\n"); /*or cli->getHostname() instead of localhost -> IP of the client*/
+	// cli->sendReply("002 Your host is " + this->_serverName + ", running version 1.0\n");
+	// cli->sendReply("003 This server was created " + this->_creationDate);
+	// cli->sendReply("004 " + this->_serverName + "version 1.0, usermodes=OPERATOR-REGISTERED, channelmodes=PUBLIC-PRIVATE-INVITE_ONLY-PRIVATE_WITH_INVITE\n");
+	// // cli->sendReply("005 " + "1 :is supported by this server\n");
+	// cli->sendReply("005 PREFIX=(ov)@+ CHANMODES=beI,k,l,imnpstrRcOAQKVCuzNSMTGZ NETWORK=IRCNetare supported by this server\n");
+	cli->setRegistration(true);
+
+
+	cli->sendReply("001 " + cli->getNickname() + " :Welcome to the Internet Relay Network " + cli->getNickname() + "!" +
+            cli->getUsername() + "@" + cli->getHostname() + "\r\n");
 }
 
 void IRCServer::_performCommand(Input const & input, Client *cli) {
@@ -148,14 +159,7 @@ void IRCServer::_performCommand(Input const & input, Client *cli) {
 	this->_commands[input.getTokens().front()]->execute(input, cli, *this);
 	if (cli->isRegistered() == false) {
 		if (cli->getNickname() != "" && cli->getUsername() != "" && cli->isAuthentificated() == true) {
-			cli->sendReply("001", "Welcome to the Internet Relay Network " + cli->getNickname() + "!" + cli->getUsername() + "@" + "localhost\n"); /*or cli->getHostname() instead of localhost -> IP of the client*/
-			cli->sendReply("002", "Your host is " + this->_serverName + ", running version 1.0\n");
-			cli->sendReply("003", "This server was created " + this->_creationDate);
-			cli->sendReply("004", this->_serverName + "version 1.0, usermodes=OPERATOR-REGISTERED, channelmodes=PUBLIC-PRIVATE-INVITE_ONLY-PRIVATE_WITH_INVITE\n");
-			// cli->sendReply("005", "1 :is supported by this server\n");
-			cli->sendReply("005", "PREFIX=(ov)@+ CHANMODES=beI,k,l,imnpstrRcOAQKVCuzNSMTGZ NETWORK=IRCNetare supported by this server\n");
-			cli->setRegistration(true);
-			_registrationProced();
+			_registrationProced(cli);
 		}
 	}
 }
