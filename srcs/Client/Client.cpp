@@ -8,7 +8,7 @@ Client::Client(int fd):
 Client::~Client() {}
 
 void Client::sendReply(string const & code, string const & reply) const {
-	string msg = ":" + this->_nickname + " " + code + " " + reply + "\r";
+	string msg = ":" + string(SERVER_NAME) + " " + code + " :" + this->_nickname + " " + reply + "\r";
 	int n = send(this->_fd, msg.c_str(), msg.length(), 0);
 	if (n < 0) {
 		throw runtime_error("Error: send() failed");

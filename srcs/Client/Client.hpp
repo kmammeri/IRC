@@ -6,6 +6,9 @@
 #include <sys/socket.h>
 #include <stdexcept>
 #include <iostream>
+// #define SERVER_NAME "irc.42.fr"
+#define SERVER_NAME "test"
+
 
 
 using namespace std;

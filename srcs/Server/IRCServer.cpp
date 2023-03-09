@@ -9,7 +9,12 @@
 IRCServer::IRCServer(int port,  const char* password, int state):
 	_port(port),
 	_password(password), 
-	_state(state) {}
+	_state(state)
+	 {
+		this->_serverName = SERVER_NAME;
+		std::time_t result = std::time(NULL);
+    	this->_creationDate = std::ctime(&result);
+	 }
 
 // Memnber functions
 
@@ -125,12 +130,13 @@ void IRCServer::_acceptConnection() {
 }
 
 void IRCServer::_registrationProced() const {
+
 	cout << "LE CLIENT EST REGISTER" << endl;
 }
 
 void IRCServer::_performCommand(Input const & input, Client *cli) {
 
-	if (cli->isRegistered() == false && !(input.getTokens().front() == "PASS" || input.getTokens().front() == "USER" || input.getTokens().front() == "NICK")) {
+	if (cli->isRegistered() == false && !(input.getTokens().front() == "PASS" || input.getTokens().front() == "USER" || input.getTokens().front() == "NICK" || input.getTokens().front() == "CAP")) {
 		cout << "Error: You must be authentificated first" << endl;
 		disconnectClient(cli->getFd());
 		return ;
@@ -142,6 +148,12 @@ void IRCServer::_performCommand(Input const & input, Client *cli) {
 	this->_commands[input.getTokens().front()]->execute(input, cli, *this);
 	if (cli->isRegistered() == false) {
 		if (cli->getNickname() != "" && cli->getUsername() != "" && cli->isAuthentificated() == true) {
+			cli->sendReply("001", "Welcome to the Internet Relay Network " + cli->getNickname() + "!" + cli->getUsername() + "@" + "localhost\n"); /*or cli->getHostname() instead of localhost -> IP of the client*/
+			cli->sendReply("002", "Your host is " + this->_serverName + ", running version 1.0\n");
+			cli->sendReply("003", "This server was created " + this->_creationDate);
+			cli->sendReply("004", this->_serverName + "version 1.0, usermodes=OPERATOR-REGISTERED, channelmodes=PUBLIC-PRIVATE-INVITE_ONLY-PRIVATE_WITH_INVITE\n");
+			// cli->sendReply("005", "1 :is supported by this server\n");
+			cli->sendReply("005", "PREFIX=(ov)@+ CHANMODES=beI,k,l,imnpstrRcOAQKVCuzNSMTGZ NETWORK=IRCNetare supported by this server\n");
 			cli->setRegistration(true);
 			_registrationProced();
 		}

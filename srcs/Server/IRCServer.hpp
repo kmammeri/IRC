@@ -14,7 +14,7 @@
 # include <arpa/inet.h>
 # include <fcntl.h>
 # include <unistd.h>
-
+# include <ctime>
 
 # include "../Client/Client.hpp"
 # include "../Channel/Channel.hpp"
@@ -30,6 +30,8 @@ class IRCServer {
 	private:
 		int						_port;
 		string					_password;
+		string					_serverName;
+		string					_creationDate;
 		int 					_state;				
 		
 		int 					_mainSock;
