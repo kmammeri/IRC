@@ -18,3 +18,8 @@ string	Channel::getTopic() const {
 int		Channel::getMode() const {
 	return this->_mode;
 }
+
+void	Channel::addUser(Client * cli) {
+	if (this->_users.find(cli->getNickname()) == this->_users.end())
+		this->_users.insert(pair<string, Client>(cli->getNickname(), *cli));
+}

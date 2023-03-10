@@ -27,4 +27,7 @@ class Channel {
 		string	getName() const;
 		string	getTopic() const;
 		int		getMode() const;
+
+		void	addUser(Client * cli);
+		void	removeUser(Client * cli);
 };

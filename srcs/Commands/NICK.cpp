@@ -12,6 +12,10 @@ bool NICK::execute(Input const & cmd, Client * cli, IRCServer & serv) {
 		cli->sendReply("461 Not enough parameters");
 		return false;
 	}
+	if (serv.getClientByNick(cmd.getTokens()[1])) {
+		cli->sendReply("433 Nickname is already in use");
+		return false;
+	}
 	cli->setNickname(cmd.getTokens()[1]);
 	return true;
 }

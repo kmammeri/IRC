@@ -25,12 +25,13 @@ class PASS: public ACommand {
 
 class USER: public ACommand {
 	public:
-		virtual bool execute(Input const & cmd, Client * cli, IRCServer & serv);
+		virtual bool	execute(Input const & cmd, Client * cli, IRCServer & serv);
 };
 
 class NICK: public ACommand {
 	public:
-		virtual bool execute(Input const & cmd, Client * cli, IRCServer & serv);
+		virtual bool	execute(Input const & cmd, Client * cli, IRCServer & serv);
+
 };
 
 class JOIN: public ACommand {

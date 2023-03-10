@@ -208,7 +208,7 @@ Client * IRCServer::getClient(int fd) {
 	return NULL;
 }
 
-Client * IRCServer::getClient(string username) {
+Client * IRCServer::getClientByUser(string username) {
 	for (vector<Client>::iterator it = this->_clients.begin(); it != this->_clients.end(); it++) {
 		if (it->getUsername() == username) {
 			return (&(*it));
@@ -217,6 +217,29 @@ Client * IRCServer::getClient(string username) {
 	return NULL;
 }
 
+
+Client * IRCServer::getClientByNick(string nickname) {
+	for (vector<Client>::iterator it = this->_clients.begin(); it != this->_clients.end(); it++) {
+		if (it->getNickname() == nickname) {
+			return (&(*it));
+		}
+	}
+	return NULL;
+}
+
+Channel * IRCServer::getChannel(string channelName) {
+	if (this->_channels.find(channelName) == this->_channels.end())
+		return NULL;
+	return (this->_channels[channelName]);
+}
+
 string const & IRCServer::getPassword() const {
 	return this->_password;
+}
+
+// Setters
+
+void IRCServer::createChannel(string const & channelName) {
+	Channel * newChan = new Channel(channelName, PUBLIC);
+	this->_channels.insert(std::pair<string, Channel *>(channelName, newChan));
 }

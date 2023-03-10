@@ -38,8 +38,8 @@ class IRCServer {
 		vector<struct pollfd>	_pollfds;
 
 		vector<Client>			_clients;
-		map<string, Channel>	_channels;
-		map<string, ACommand*>	_commands;
+		map<string, Channel *>	_channels;
+		map<string, ACommand *>	_commands;
 
 		void 	_init();
 		void 	_setCmdsBank();
@@ -57,8 +57,16 @@ class IRCServer {
 		void 	disconnectClient(int clientfd);
 
 		// Getters
+		bool 			usernameAlreadyExists(string const & username);
+		bool 			nicknameAlreadyExists(string const & nickname);
+		bool 			channelAlreadyExists(string const & channelName);
+
 		Client *		getClient(int fd);
-		Client * 		getClient(string username);
+		Client *		getClientByUser(string username);
+		Client *		getClientByNick(string username);
+		Channel *		getChannel(string channelName);
 		string const &	getPassword() const;
 
+		// Setters
+		void 			createChannel(string const & channelName);
 };
