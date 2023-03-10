@@ -108,6 +108,13 @@ void IRCServer::start() {
 				}
 			}
 		}
+		cout << "all channels:::" << endl;
+		for (map<string, Channel *>::iterator it = this->_channels.begin(); it != this->_channels.end(); ++it){
+			cout << "  " << it->first << ":" << endl;
+			for (map<string, Client>::const_iterator it2 = it->second->getUsers().begin(); it2 != it->second->getUsers().end(); ++it2) {
+				cout << "    " << it2->first << endl;
+			}
+		}
 		cout << "========================================" << endl;
 	}
 }
@@ -141,7 +148,10 @@ void IRCServer::_registrationProced(Client * cli) const {
 	cli->setRegistration(true);
 
 
-	cli->sendReply("001 " + cli->getNickname() + " :Welcome to the Internet Relay Network " + cli->getNickname() + "!" +
+	// cli->sendReply("001 " + cli->getNickname() + " :Welcome to the Internet Relay Network " + cli->getNickname() + "!" +
+        //    cli->getUsername() + "@" + cli->getHostname() + "\r\n");
+
+	cli->sendReply(":" + string(SERVER_NAME) + " 001 " + cli->getNickname() + " :Welcome to the Internet Relay Network " + cli->getNickname() + "!" +
             cli->getUsername() + "@" + cli->getHostname() + "\r\n");
 }
 
