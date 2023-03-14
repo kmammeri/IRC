@@ -17,6 +17,7 @@ SRCS 		=	srcs/ircserv.cpp \
 				srcs/Commands/USER.cpp \
 				srcs/Commands/NICK.cpp \
 				srcs/Commands/JOIN.cpp \
+				srcs/Commands/PRIVMSG.cpp \
 				srcs/utils/utils.cpp
 
 

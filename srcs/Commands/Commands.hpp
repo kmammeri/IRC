@@ -38,3 +38,8 @@ class JOIN: public ACommand {
 	public:
 		virtual bool execute(Input const & cmd, Client * cli, IRCServer & serv);
 };
+
+class PRIVMSG: public ACommand {
+	public:
+		virtual bool execute(Input const & cmd, Client * cli, IRCServer & serv);
+};

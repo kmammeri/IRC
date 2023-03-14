@@ -51,7 +51,7 @@ void IRCServer::_setCmdsBank() {
 	this->_commands.insert(pair<string, ACommand*>("NICK", new NICK()));
 	this->_commands.insert(pair<string, ACommand*>("JOIN", new JOIN()));
 	// this->_commands.insert(pair<string, ACommand*>("PART", new PART()));
-	// this->_commands.insert(pair<string, ACommand*>("PRIVMSG", new PRIVMSG()));
+	this->_commands.insert(pair<string, ACommand*>("PRIVMSG", new PRIVMSG()));
 	// this->_commands.insert(pair<string, ACommand*>("QUIT", new QUIT()));
 	// this->_commands.insert(pair<string, ACommand*>("PING", new PING()));
 	// this->_commands.insert(pair<string, ACommand*>("PONG", new PONG()));
@@ -163,7 +163,10 @@ void IRCServer::_performCommand(Input const & input, Client *cli) {
 		return ;
 	}
 	if (this->_commands.find(input.getTokens().front()) == this->_commands.end()) {
-		cout << "Error: Command not found in map of commands" << endl;
+		if (input.getTokens().front() != "MODE")
+		{
+			cout << "Error: Command not found in map of commands" << endl;
+		}
 		return ;
 	}
 	this->_commands[input.getTokens().front()]->execute(input, cli, *this);
