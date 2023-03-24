@@ -7,7 +7,8 @@ TODO list:
 	- gerer les commades partiels
 	- concatener si besoin les messages :: overflow et ^D
 	- bien repondre en fonction de ce qu'on recoit
-	- faire les commandes 
+	- faire les commandes
+	- Attention les commandes empty avec nc abort avec fsanityze
 			::JOIN
 			::PART
 			::TOPIC -> Operator
