@@ -48,6 +48,13 @@ void Channel::sendToAll(string msg) const {
 	}
 }
 
+void Channel::sendToAllOthers(string msg, const Client &cli) const {
+	for (map<string, Client>::const_iterator it = this->_users.begin(); it != this->_users.end(); ++it) {
+		if (it->second.getNickname() != cli.getNickname())
+			it->second.sendReply(msg);
+	}
+}
+
 map<string, Client> const &	Channel::getUsers() const {
 	return this->_users;
 }
