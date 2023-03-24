@@ -44,6 +44,11 @@ class PRIVMSG: public ACommand {
 		virtual bool execute(Input const & cmd, Client * cli, IRCServer & serv);
 };
 
+class NOTICE: public ACommand {
+	public:
+		virtual bool execute(Input const & cmd, Client * cli, IRCServer & serv);
+};
+
 class KICK: public ACommand {
 	public:
 		virtual bool execute(Input const & cmd, Client * cli, IRCServer & serv);

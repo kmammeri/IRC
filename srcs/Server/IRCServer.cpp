@@ -61,7 +61,7 @@ void IRCServer::_setCmdsBank() {
 	// this->_commands.insert(pair<string, ACommand*>("MODE", new MODE()));
 	this->_commands.insert(pair<string, ACommand*>("KICK", new KICK()));
 	// this->_commands.insert(pair<string, ACommand*>("INVITE", new INVITE()));
-	// this->_commands.insert(pair<string, ACommand*>("NOTICE", new NOTICE()));
+	this->_commands.insert(pair<string, ACommand*>("NOTICE", new NOTICE()));
 }
 
 void IRCServer::start() {
