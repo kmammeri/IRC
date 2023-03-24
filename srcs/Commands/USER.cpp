@@ -8,7 +8,7 @@ bool USER::execute(Input const & cmd, Client * cli, IRCServer & serv) {
 		cli->sendReply("462 You are already registered");
 		return false;
 	}
-	if (cmd.getTokens().size() < 5) {
+	if (cmd.getTokens().size() < 2) {
 		cli->sendReply("461 Not enough parameters");
 		return false;
 	}
@@ -17,8 +17,10 @@ bool USER::execute(Input const & cmd, Client * cli, IRCServer & serv) {
 		return false;
 	}
 	cli->setUsername(cmd.getTokens()[1]);
-	cli->setServername(cmd.getTokens()[2]);
-	cli->setRealname(cmd.getTokens()[4]);
+	if (cmd.getTokens().size() == 4) {
+		cli->setServername(cmd.getTokens()[2]);
+		cli->setRealname(cmd.getTokens()[4]);
+	}
 	return true;
 }
 
