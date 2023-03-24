@@ -25,6 +25,10 @@ void Client::setUsername(string const & username) {
 	this->_username = username;
 }
 
+void Client::setChatwith(string const & chatwith) {
+	this->_chatwith = chatwith;
+}
+
 void Client::setNickname(string const & nickname) {
 	this->_nickname = nickname;
 }
@@ -49,6 +53,10 @@ void Client::setRegistration(bool reg) {
 
 int Client::getFd() const {
 	return this->_fd;
+}
+
+string const & Client::getChatwith() const {
+	return this->_chatwith;
 }
 
 string const & Client::getNickname() const {

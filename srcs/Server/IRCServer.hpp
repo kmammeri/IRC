@@ -31,7 +31,7 @@ class IRCServer {
 		int						_port;
 		string					_password;
 		string					_serverName;
-		string					_creationDate;
+		// string					_creationDate;
 		int 					_state;				
 		
 		int 					_mainSock;

@@ -55,3 +55,12 @@ map<string, Client> const &	Channel::getUsers() const {
 void	Channel::setOperator(string const & op) {
 	this->_operator = op;
 }
+
+void Channel::removeUser(Client *cli)
+{
+	
+	if (this->_users.find(cli->getNickname()) != this->_users.end())
+	{
+		this->_users.erase(cli->getNickname());
+	}
+}

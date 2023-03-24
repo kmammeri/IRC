@@ -15,6 +15,7 @@ using namespace std;
 class Client {
 	private:
 		int		_fd;
+		string	_chatwith;
 		string	_username;
 		string	_nickname;
 		string 	_realname;
@@ -31,6 +32,7 @@ class Client {
 		void 	sendReply(string reply) const;
 
 		// Setters
+		void 	setChatwith(string const & chatwith);
 		void 	setUsername(string const & username);
 		void 	setNickname(string const & nickname);
 		void 	setRealname(string const & realname);
@@ -39,6 +41,7 @@ class Client {
 		void	setRegistration(bool reg);
 
 		// Getters
+		string const &	getChatwith() const;
 		int				getFd() const;
 		string const &	getNickname() const;
 		string const &	getUsername() const;

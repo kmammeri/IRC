@@ -12,8 +12,8 @@ IRCServer::IRCServer(int port,  const char* password, int state):
 	_state(state)
 	 {
 		this->_serverName = SERVER_NAME;
-		std::time_t result = std::time(NULL);
-    	this->_creationDate = std::ctime(&result);
+		// std::time_t result = std::time(NULL);
+		// this->_creationDate = std::ctime(&result);
 	 }
 
 // Memnber functions
@@ -53,13 +53,13 @@ void IRCServer::_setCmdsBank() {
 	// this->_commands.insert(pair<string, ACommand*>("PART", new PART()));
 	this->_commands.insert(pair<string, ACommand*>("PRIVMSG", new PRIVMSG()));
 	// this->_commands.insert(pair<string, ACommand*>("QUIT", new QUIT()));
-	// this->_commands.insert(pair<string, ACommand*>("PING", new PING()));
+	this->_commands.insert(pair<string, ACommand*>("PING", new PING()));
 	// this->_commands.insert(pair<string, ACommand*>("PONG", new PONG()));
 	// this->_commands.insert(pair<string, ACommand*>("LIST", new LIST()));
 	// this->_commands.insert(pair<string, ACommand*>("NAMES", new NAMES()));
 	// this->_commands.insert(pair<string, ACommand*>("TOPIC", new TOPIC()));
 	// this->_commands.insert(pair<string, ACommand*>("MODE", new MODE()));
-	// this->_commands.insert(pair<string, ACommand*>("KICK", new KICK()));
+	this->_commands.insert(pair<string, ACommand*>("KICK", new KICK()));
 	// this->_commands.insert(pair<string, ACommand*>("INVITE", new INVITE()));
 	// this->_commands.insert(pair<string, ACommand*>("NOTICE", new NOTICE()));
 }
