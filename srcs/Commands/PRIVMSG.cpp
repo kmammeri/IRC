@@ -24,7 +24,7 @@ cout << "PRIVMSG command received" << endl;
             return false;
         }
         cout << "Sending to channel " << chan->getName() << endl;
-        chan->sendToAll(":" + cli->getNickname() + " PRIVMSG " + chan->getName() + " " + msg + "\r\n");
+        chan->sendToAllOthers(":" + cli->getNickname() + " PRIVMSG " + chan->getName() + " " + msg + "\r\n", *cli);
         return true;
     }
     cout << "************* debug : " << cmd.getTokens()[1].substr(0) << " **************" << endl;
