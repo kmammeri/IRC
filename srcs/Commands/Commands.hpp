@@ -54,6 +54,11 @@ class KICK: public ACommand {
 		virtual bool execute(Input const & cmd, Client * cli, IRCServer & serv);
 };
 
+class PART: public ACommand {
+	public:
+		virtual bool execute(Input const & cmd, Client * cli, IRCServer & serv);
+};
+
 class PING: public ACommand {
 	public:
 		virtual bool execute(Input const & cmd, Client * cli, IRCServer & serv);

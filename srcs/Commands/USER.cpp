@@ -5,15 +5,15 @@ bool USER::execute(Input const & cmd, Client * cli, IRCServer & serv) {
 	
 	(void)serv;
 	if (cli->getUsername() != "" || cli->isRegistered() == true) {
-		cli->sendReply("462 You are already registered");
+		cli->sendReply("462 You are already registered\r\n");
 		return false;
 	}
 	if (cmd.getTokens().size() < 2) {
-		cli->sendReply("461 Not enough parameters");
+		cli->sendReply("461 Not enough parameters\r\n");
 		return false;
 	}
 	if (serv.getClientByUser(cmd.getTokens()[1])) {
-		cli->sendReply("433 Username is already in use");
+		cli->sendReply("433 Username is already in use\r\n");
 		return false;
 	}
 	cli->setUsername(cmd.getTokens()[1]);

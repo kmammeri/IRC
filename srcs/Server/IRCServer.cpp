@@ -50,7 +50,7 @@ void IRCServer::_setCmdsBank() {
 	this->_commands.insert(pair<string, ACommand*>("USER", new USER()));
 	this->_commands.insert(pair<string, ACommand*>("NICK", new NICK()));
 	this->_commands.insert(pair<string, ACommand*>("JOIN", new JOIN()));
-	// this->_commands.insert(pair<string, ACommand*>("PART", new PART()));
+	this->_commands.insert(pair<string, ACommand*>("PART", new PART()));
 	this->_commands.insert(pair<string, ACommand*>("PRIVMSG", new PRIVMSG()));
 	// this->_commands.insert(pair<string, ACommand*>("QUIT", new QUIT()));
 	this->_commands.insert(pair<string, ACommand*>("PING", new PING()));
