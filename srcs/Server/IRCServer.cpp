@@ -16,6 +16,13 @@ IRCServer::IRCServer(int port,  const char* password, int state):
 		// this->_creationDate = std::ctime(&result);
 	 }
 
+IRCServer::~IRCServer() {
+	// Close the main socket
+	for (map<string, Channel *>::iterator it = this->_channels.begin(); it != this->_channels.end(); it++)
+		delete it->second;
+	close(this->_mainSock);
+}
+
 // Memnber functions
 
 void IRCServer::_init() {
@@ -52,15 +59,15 @@ void IRCServer::_setCmdsBank() {
 	this->_commands.insert(pair<string, ACommand*>("JOIN", new JOIN()));
 	this->_commands.insert(pair<string, ACommand*>("PART", new PART()));
 	this->_commands.insert(pair<string, ACommand*>("PRIVMSG", new PRIVMSG()));
-	// this->_commands.insert(pair<string, ACommand*>("QUIT", new QUIT()));
+	this->_commands.insert(pair<string, ACommand*>("QUIT", new QUIT()));
 	this->_commands.insert(pair<string, ACommand*>("PING", new PING()));
 	// this->_commands.insert(pair<string, ACommand*>("PONG", new PONG()));
-	// this->_commands.insert(pair<string, ACommand*>("LIST", new LIST()));
-	// this->_commands.insert(pair<string, ACommand*>("NAMES", new NAMES()));
-	// this->_commands.insert(pair<string, ACommand*>("TOPIC", new TOPIC()));
-	// this->_commands.insert(pair<string, ACommand*>("MODE", new MODE()));
+	this->_commands.insert(pair<string, ACommand*>("LIST", new LIST()));
+	this->_commands.insert(pair<string, ACommand*>("NAMES", new NAMES()));
+	this->_commands.insert(pair<string, ACommand*>("TOPIC", new TOPIC()));
+	this->_commands.insert(pair<string, ACommand*>("MODE", new MODE()));
 	this->_commands.insert(pair<string, ACommand*>("KICK", new KICK()));
-	// this->_commands.insert(pair<string, ACommand*>("INVITE", new INVITE()));
+	this->_commands.insert(pair<string, ACommand*>("INVITE", new INVITE()));
 	this->_commands.insert(pair<string, ACommand*>("NOTICE", new NOTICE()));
 }
 
@@ -252,7 +259,26 @@ string const & IRCServer::getPassword() const {
 
 // Setters
 
-void IRCServer::createChannel(string const & channelName) {
-	Channel * newChan = new Channel(channelName, PUBLIC);
+void IRCServer::createChannel(string const & channelName, const int &mode) {
+	Channel * newChan = new Channel(channelName, mode);
 	this->_channels.insert(std::pair<string, Channel *>(channelName, newChan));
+}
+
+void IRCServer::deleteChannel(string const & channelName) {
+	if (this->_channels.find(channelName) != this->_channels.end()) {
+		delete this->_channels[channelName];
+		this->_channels.erase(channelName);
+	}
+}
+
+vector<string> IRCServer::getVectChannels() const {
+	vector<string> channels;
+	for (map<string, Channel *>::const_iterator it = this->_channels.begin(); it != this->_channels.end(); it++) {
+		channels.push_back(it->first);
+	}
+	return channels;
+}
+
+map<string, Channel *> IRCServer::getChannels() {
+	return this->_channels;
 }

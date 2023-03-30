@@ -10,7 +10,7 @@ bool KICK::execute(Input const & cmd, Client * cli, IRCServer & serv) {
         Client *target = serv.getClientByNick(cmd.getTokens()[2]);
         if (target)
         {
-            string msg = ":" + cli->getHostname() + " KICK " + cmd.getTokens()[1] + " " + cmd.getTokens()[2];
+            string msg = ":" + cli->getNickname() + " KICK " + cmd.getTokens()[1] + " " + cmd.getTokens()[2];
             if (cmd.getTokens().size() > 3)
             {
                 msg += " :";

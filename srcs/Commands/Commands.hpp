@@ -49,6 +49,21 @@ class NOTICE: public ACommand {
 		virtual bool execute(Input const & cmd, Client * cli, IRCServer & serv);
 };
 
+class NAMES: public ACommand {
+	public:
+		virtual bool execute(Input const & cmd, Client * cli, IRCServer & serv);
+};
+
+class LIST: public ACommand {
+	public:
+		virtual bool execute(Input const & cmd, Client * cli, IRCServer & serv);
+};
+
+class INVITE: public ACommand {
+	public:
+		virtual bool execute(Input const & cmd, Client * cli, IRCServer & serv);
+};
+
 class KICK: public ACommand {
 	public:
 		virtual bool execute(Input const & cmd, Client * cli, IRCServer & serv);
@@ -59,7 +74,22 @@ class PART: public ACommand {
 		virtual bool execute(Input const & cmd, Client * cli, IRCServer & serv);
 };
 
+class TOPIC: public ACommand {
+	public:
+		virtual bool execute(Input const & cmd, Client * cli, IRCServer & serv);
+};
+
+class MODE: public ACommand {
+	public:
+		virtual bool execute(Input const & cmd, Client * cli, IRCServer & serv);
+};
+
 class PING: public ACommand {
+	public:
+		virtual bool execute(Input const & cmd, Client * cli, IRCServer & serv);
+};
+
+class QUIT: public ACommand {
 	public:
 		virtual bool execute(Input const & cmd, Client * cli, IRCServer & serv);
 };

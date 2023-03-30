@@ -39,15 +39,7 @@ cout << "PRIVMSG command received" << endl;
         cli->sendReply("401 No such nick\r\n");
         return false;
     }
-    // if (target->getNickname() != cli->getChatwith()) {
-    //     cli->setChatwith(target->getNickname());
-    //     target->setChatwith(cli->getNickname());
-    //     cout << "Creating a new chat beetwin " << cli->getNickname() << " and " << target->getNickname() << endl;
-    //     target->sendReply(":" + cli->getNickname() + "!" + cli->getUsername() + "@" + cli->getHostname() + " 331 " + cli->getNickname() + " " + target->getNickname() + " : no topic is set");
-    // }
-        // cout << "Sending to client " << cli->getFd() << " " << cli->getNickname() << endl;
-        // cli->sendReply(":" + cli->getNickname() + "!" + cli->getUsername() + "@" + cli->getHostname() + " PRIVMSG " + target->getNickname() + " " + cmd.getTokens()[2]);
-        cout << "Sending to target number " << target->getFd() << "  nickname :" << target->getNickname() << endl;
-        target->sendReply(":" + cli->getNickname() + " PRIVMSG " + cli->getNickname() + " " + msg + "\r\n");
-        return true;
+    cout << "Sending to target number " << target->getFd() << "  nickname :" << target->getNickname() << endl;
+    target->sendReply(":" + cli->getNickname() + " PRIVMSG " + cli->getNickname() + " " + msg + "\r\n");
+    return true;
 }

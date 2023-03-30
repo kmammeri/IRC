@@ -28,6 +28,11 @@ void	Channel::addUser(Client * cli) {
 		this->_users.insert(pair<string, Client>(cli->getNickname(), *cli));
 }
 
+void	Channel::addInvite(Client * cli) {
+	if (this->_inviteList.find(cli->getNickname()) == this->_inviteList.end())
+		this->_inviteList.insert(pair<string, Client>(cli->getNickname(), *cli));
+}
+
 string Channel::getStrAllUsers() const {
 	string clients;
 
@@ -37,6 +42,20 @@ string Channel::getStrAllUsers() const {
         clients += it->second.getNickname();
 		if (this->_users.size() > 1)
 			if (it != --this->_users.end())
+				clients += " ";
+    }
+    return clients;;
+}
+
+string Channel::getStrAllInvite() const {
+	string clients;
+
+    for (map<string, Client>::const_iterator it = this->_inviteList.begin(); it != this->_inviteList.end(); ++it) {
+        if (it->second.getNickname() == this->_operator)
+            clients += "@";
+        clients += it->second.getNickname();
+		if (this->_inviteList.size() > 1)
+			if (it != --this->_inviteList.end())
 				clients += " ";
     }
     return clients;;
@@ -59,6 +78,10 @@ map<string, Client> const &	Channel::getUsers() const {
 	return this->_users;
 }
 
+map<string, Client> const &	Channel::getInviteListe() const {
+	return this->_inviteList;
+}
+
 void	Channel::setOperator(string const & op) {
 	this->_operator = op;
 }
@@ -70,4 +93,12 @@ void Channel::removeUser(Client *cli)
 	{
 		this->_users.erase(cli->getNickname());
 	}
+}
+
+void Channel::setTopic(string const & topic) {
+	this->_topic = topic;
+}
+
+string Channel::getFirstUser() const {
+	return this->_users.begin()->second.getNickname();
 }

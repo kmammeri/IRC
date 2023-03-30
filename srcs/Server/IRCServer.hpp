@@ -52,6 +52,7 @@ class IRCServer {
 
 	public:
 		IRCServer(int port, const char* password, int state);
+		~IRCServer();
 		void 	start();
 		string	receiveMessage(int fd);
 		void 	disconnectClient(int clientfd);
@@ -65,8 +66,14 @@ class IRCServer {
 		Client *		getClientByUser(string username);
 		Client *		getClientByNick(string username);
 		Channel *		getChannel(string channelName);
+		vector<string>	getVectChannels() const;
+		map<string, Channel *>	getChannels();
+
+
 		string const &	getPassword() const;
 
 		// Setters
-		void 			createChannel(string const & channelName);
+		void 			createChannel(string const & channelName, const int &mode);
+		void 			deleteChannel(string const & channelName);
+
 };

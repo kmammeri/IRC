@@ -33,8 +33,14 @@ class Channel {
 		string const &	getOperator() const;
 
 		map<string, Client> const &	getUsers() const;
+		map<string, Client> const &	getInviteListe() const;
 		void	addUser(Client * cli);
+		void	addInvite(Client * cli);
 		void	removeUser(Client * cli);
 		string	getStrAllUsers() const;
+		string	getStrAllInvite() const;
+		string	getFirstUser() const;
 		void	setOperator(string const & op);
+		void	setTopic(string const & topic);
+
 };

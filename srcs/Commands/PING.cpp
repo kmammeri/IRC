@@ -7,6 +7,6 @@ bool    PING::execute(Input const & cmd, Client * cli, IRCServer & serv)
         cli->sendReply("461" + cli->getNickname() + " :Not enough parameters\r\n");
         return false;
     }
-    cli->sendReply("PONG " + cmd.getTokens()[1] + "\r\n");
+    cli->sendReply("PONG " + cmd.getTokens()[1] + " " + cli->getHostname() + "\r\n");
     return true;
 }

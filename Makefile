@@ -22,6 +22,12 @@ SRCS 		=	srcs/ircserv.cpp \
 				srcs/Commands/PART.cpp \
 				srcs/Commands/PRIVMSG.cpp \
 				srcs/Commands/NOTICE.cpp \
+				srcs/Commands/INVITE.cpp \
+				srcs/Commands/MODE.cpp \
+				srcs/Commands/TOPIC.cpp \
+				srcs/Commands/NAMES.cpp \
+				srcs/Commands/LIST.cpp \
+				srcs/Commands/QUIT.cpp \
 				srcs/utils/utils.cpp
 
 
