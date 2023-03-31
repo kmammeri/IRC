@@ -215,20 +215,22 @@ string IRCServer::receiveMessage(int clientfd) {
 	else {
 		buffer[n] = '\0';
 	}
+
 	if (buffer[strlen(buffer) - 1] != '\n') {
 		msg += buffer;
 		return "";
 	}
 	else {
 		msg += buffer;
+		if ((msg.find("PASS") != string::npos && msg.find("USER") != string::npos) || (msg.find("NICK") != string::npos && msg.find("USER") != string::npos) || (msg.find("NICK") != string::npos && msg.find("PASS") != string::npos) || (msg.find("CAP") != string::npos && msg.find("USER") != string::npos) || (msg.find("CAP") != string::npos && msg.find("NICK") != string::npos) || (msg.find("CAP") != string::npos && msg.find("PASS") != string::npos)) {
+			disconnectClient(clientfd);
+			// return "";
+		}
 		cout << "Received raw message from client " << clientfd << ": " << msg << endl;
 		string tmp = msg;
 		msg = "";
 		return tmp;
 	}
-	msg += buffer;
-	cout << "Received raw message from client " << clientfd << ": " << buffer << endl;
-	return string(buffer);
 }
 
 // Getters

@@ -14,6 +14,8 @@ Input::~Input() {
 // Setters
 
 void Input::_tokenise() {
+	if (this->_rawInput.find("PASS") != string::npos)
+		this->_rawInput.erase(0, _rawInput.find("PASS"));
 	size_t i1 = 0;
 	while (this->_rawInput[i1] == ' ') {
 		i1++;
