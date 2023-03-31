@@ -203,22 +203,35 @@ void IRCServer::disconnectClient(int clientfd) {
 
 string IRCServer::receiveMessage(int clientfd) {
 	char buffer[LEN_MAX];
+	static string msg;
+	
 	int n = recv(clientfd, buffer, sizeof(buffer), 0);
-	if (n < 0) {
-		throw runtime_error("Error: recv() failed");
-	}
-	else if (n == 0) {
+	// if (n < 0) {
+	// 	throw runtime_error("Error: recv() failed");
+	// }
+	if (n == 0) {
 		disconnectClient(clientfd);
 	}
 	else {
 		buffer[n] = '\0';
 	}
+	if (buffer[strlen(buffer) - 1] != '\n') {
+		msg += buffer;
+		return "";
+	}
+	else {
+		msg += buffer;
+		cout << "Received raw message from client " << clientfd << ": " << msg << endl;
+		string tmp = msg;
+		msg = "";
+		return tmp;
+	}
+	msg += buffer;
 	cout << "Received raw message from client " << clientfd << ": " << buffer << endl;
 	return string(buffer);
 }
 
 // Getters
-
 Client * IRCServer::getClient(int fd) {
 	for (vector<Client>::iterator it = this->_clients.begin(); it != this->_clients.end(); it++) {
 		if (it->getFd() == fd) {
