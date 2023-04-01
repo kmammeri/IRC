@@ -50,9 +50,9 @@ bool  MODE::execute(Input const & cmd, Client * cli, IRCServer & serv)
                 // cout << "test target = " << target->getNickname() << endl;
                 if (target)
                 {
-                    serv.getChannel(cmd.getTokens()[1])->setOperator(target->getNickname());
                     serv.getChannel(cmd.getTokens()[1])->sendToAll(":" + cli->getNickname() + " MODE " + cmd.getTokens()[1] + " +o " + target->getNickname() + "\r\n");
                     serv.getChannel(cmd.getTokens()[1])->sendToAll(":" + cli->getNickname() + " MODE " + cmd.getTokens()[1] + " -o " + serv.getChannel(cmd.getTokens()[1])->getOperator() + "\r\n");
+                    serv.getChannel(cmd.getTokens()[1])->setOperator(target->getNickname());
                 }
             }
             else if (cmd.getTokens()[2] == "-o")
@@ -60,11 +60,15 @@ bool  MODE::execute(Input const & cmd, Client * cli, IRCServer & serv)
                 Client *target = serv.getClientByNick(cmd.getTokens()[3]);
                 if (target)
                 {
-                    serv.getChannel(cmd.getTokens()[1])->setOperator(serv.getChannel(cmd.getTokens()[1])->getFirstUser());
                     serv.getChannel(cmd.getTokens()[1])->sendToAll(":" + cli->getNickname() + " MODE " + cmd.getTokens()[1] + " -o " + target->getNickname() + "\r\n");
                     serv.getChannel(cmd.getTokens()[1])->sendToAll(":" + cli->getNickname() + " MODE " + cmd.getTokens()[1] + " +o " + serv.getChannel(cmd.getTokens()[1])->getFirstUser() + "\r\n");
+                    serv.getChannel(cmd.getTokens()[1])->setOperator(serv.getChannel(cmd.getTokens()[1])->getFirstUser());
                 }
             }
+        }
+        else if (cmd.getTokens().size() > 2 && cli->getNickname() != serv.getChannel(cmd.getTokens()[1])->getOperator())
+        {
+            cli->sendReply(":" + string(SERVER_NAME) + " 482 " + cli->getNickname() + " " + cmd.getTokens()[1] + " :You're not channel operator\r\n");
         }
     }
     return true;
