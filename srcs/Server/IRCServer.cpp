@@ -3,6 +3,7 @@
 #include "../Commands/Commands.hpp"
 #include "../Input/Input.hpp"
 #include "../Client/Client.hpp"
+#include "../utils/utils.hpp"
 
 // Constructors
 
@@ -101,13 +102,35 @@ void IRCServer::start() {
 							throw runtime_error("Error: Client not found in vector");
 
 						// tokenise and check if message of client is empty
-						Input input(receiveMessage(this->_pollfds[i].fd));
-						input.printTokens();
-						if (input.empty()) {
-							cout << "Empty input" << endl;
-							continue;
+						string msg = receiveMessage(this->_pollfds[i].fd);
+
+						int	nbCmd = countOccurrences('\n', msg);
+						if (nbCmd > 1)
+						{	while (nbCmd > 1)
+							{
+								Input input(msg.substr(0, msg.find("\n")));
+								input.printTokens();
+								if (input.empty()) {
+									cout << "Empty input" << endl;
+									continue;
+								}
+								else
+									_performCommand(input, client);
+								msg = msg.substr(msg.find("\n") + 1);
+								nbCmd--;
+							}
 						}
-						_performCommand(input, client);
+						else
+						{
+							Input input(msg);
+							input.printTokens();
+							if (input.empty()) {
+								cout << "Empty input" << endl;
+								continue;
+							}
+							else
+								_performCommand(input, client);
+						}
 					}
 					catch(const exception& e) {
 						cerr << e.what();

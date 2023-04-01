@@ -21,7 +21,7 @@ bool JOIN::execute(Input const & cmd, Client * cli, IRCServer & serv) {
 		else
 			serv.createChannel(chanName, PUBLIC);
 		chan = serv.getChannel(chanName);
-		cout << "Channel " << chanName << " created mode = " << chan->getMode() << endl;
+		// cout << "Channel " << chanName << " created mode = " << chan->getMode() << endl;
 		chan->setOperator(cli->getNickname());
 	}
 	if (chan->getMode() != PUBLIC && chan->getOperator() != cli->getNickname() && chan->getStrAllInvite().find(cli->getNickname()) == string::npos) {
@@ -29,8 +29,6 @@ bool JOIN::execute(Input const & cmd, Client * cli, IRCServer & serv) {
 		cli->sendReply("473 Cannot join channel (+i)\r\n");
 		return false;
 	}
-	else
-		cout << "0 si client n'est pas dans la liste des invites : " << chan->getStrAllInvite().find(cli->getNickname()) << endl;
 	chan->addUser(cli);
 	chan->sendToAll(":" + cli->getNickname() + "!" + cli->getUsername() + "@" + cli->getHostname() + " JOIN " + chanName + "\r\n");
 
