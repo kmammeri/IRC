@@ -7,6 +7,10 @@ bool  QUIT::execute(Input const & cmd, Client * cli, IRCServer & serv)
         vector<string> list = serv.getVectChannels();
         for (long unsigned int j = 0; j < list.size(); j++)
         {
+            if (serv.getChannel(list[j])->getInviteListe().find(cli->getNickname()) != serv.getChannel(list[j])->getInviteListe().end())
+            {
+                serv.getChannel(list[j])->removeInvite(cli);
+            }
             if (serv.getChannel(list[j])->getUsers().find(cli->getNickname()) != serv.getChannel(list[j])->getUsers().end())
             {
                 serv.getChannel(list[j])->removeUser(cli);

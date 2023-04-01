@@ -103,20 +103,21 @@ void IRCServer::start() {
 
 						// tokenise and check if message of client is empty
 						string msg = receiveMessage(this->_pollfds[i].fd);
-
-						int	nbCmd = countOccurrences('\n', msg);
+						int	nbCmd = countOccurrences('\r', msg);
 						if (nbCmd > 1)
-						{	while (nbCmd > 1)
+						{	while (nbCmd >= 1)
 							{
-								Input input(msg.substr(0, msg.find("\n")));
-								input.printTokens();
+								Input input(msg.substr(0, msg.find("\r\n") + 2));
+								if (input.getTokens().front() != "CAP")
+									input.printTokens();
 								if (input.empty()) {
 									cout << "Empty input" << endl;
 									continue;
 								}
-								else
+								else if (input.getTokens().front() != "CAP")
 									_performCommand(input, client);
-								msg = msg.substr(msg.find("\n") + 1);
+								if (msg.find("\r\n") != string::npos)
+									msg = msg.substr(msg.find("\r\n") + 2);
 								nbCmd--;
 							}
 						}
@@ -138,13 +139,13 @@ void IRCServer::start() {
 				}
 			}
 		}
-		cout << "all channels:::" << endl;
-		for (map<string, Channel *>::iterator it = this->_channels.begin(); it != this->_channels.end(); ++it){
-			cout << "  " << it->first << ":" << endl;
-			for (map<string, Client>::const_iterator it2 = it->second->getUsers().begin(); it2 != it->second->getUsers().end(); ++it2) {
-				cout << "    " << it2->first << endl;
-			}
-		}
+		// cout << "all channels:::" << endl;
+		// for (map<string, Channel *>::iterator it = this->_channels.begin(); it != this->_channels.end(); ++it){
+		// 	cout << "  " << it->first << ":" << endl;
+		// 	for (map<string, Client>::const_iterator it2 = it->second->getUsers().begin(); it2 != it->second->getUsers().end(); ++it2) {
+		// 		cout << "    " << it2->first << endl;
+		// 	}
+		// }
 		cout << "========================================" << endl;
 	}
 }
@@ -169,34 +170,22 @@ void IRCServer::_acceptConnection() {
 void IRCServer::_registrationProced(Client * cli) const {
 
 	cout << "LE CLIENT EST REGISTER" << endl;
-	// cli->sendReply("001 Welcome to the Internet Relay Network " + cli->getNickname() + "!" + cli->getUsername() + "@" + "localhost\n"); /*or cli->getHostname() instead of localhost -> IP of the client*/
-	// cli->sendReply("002 Your host is " + this->_serverName + ", running version 1.0\n");
-	// cli->sendReply("003 This server was created " + this->_creationDate);
-	// cli->sendReply("004 " + this->_serverName + "version 1.0, usermodes=OPERATOR-REGISTERED, channelmodes=PUBLIC-PRIVATE-INVITE_ONLY-PRIVATE_WITH_INVITE\n");
-	// // cli->sendReply("005 " + "1 :is supported by this server\n");
-	// cli->sendReply("005 PREFIX=(ov)@+ CHANMODES=beI,k,l,imnpstrRcOAQKVCuzNSMTGZ NETWORK=IRCNetare supported by this server\n");
 	cli->setRegistration(true);
-
-
-	// cli->sendReply("001 " + cli->getNickname() + " :Welcome to the Internet Relay Network " + cli->getNickname() + "!" +
-        //    cli->getUsername() + "@" + cli->getHostname() + "\r\n");
-
 	cli->sendReply(":" + string(SERVER_NAME) + " 001 " + cli->getNickname() + " :Welcome to the Internet Relay Network " + cli->getNickname() + "!" +
             cli->getUsername() + "@" + cli->getHostname() + "\r\n");
 }
 
 void IRCServer::_performCommand(Input const & input, Client *cli) {
 
+	if (input.getTokens().front() == "CAP")
+		return ;
 	if (cli->isRegistered() == false && !(input.getTokens().front() == "PASS" || input.getTokens().front() == "USER" || input.getTokens().front() == "NICK" || input.getTokens().front() == "CAP")) {
-		cout << "Error: You must be authentificated first" << endl;
+		cout << "commande received === " << input.getTokens().front() << endl;
 		disconnectClient(cli->getFd());
 		return ;
 	}
 	if (this->_commands.find(input.getTokens().front()) == this->_commands.end()) {
-		if (input.getTokens().front() != "MODE")
-		{
-			cout << "Error: Command not found in map of commands" << endl;
-		}
+		cout << "Error: Command not found in map of commands" << endl;
 		return ;
 	}
 	this->_commands[input.getTokens().front()]->execute(input, cli, *this);
@@ -245,10 +234,11 @@ string IRCServer::receiveMessage(int clientfd) {
 	}
 	else {
 		msg += buffer;
-		if ((msg.find("PASS") != string::npos && msg.find("USER") != string::npos) || (msg.find("NICK") != string::npos && msg.find("USER") != string::npos) || (msg.find("NICK") != string::npos && msg.find("PASS") != string::npos) || (msg.find("CAP") != string::npos && msg.find("USER") != string::npos) || (msg.find("CAP") != string::npos && msg.find("NICK") != string::npos) || (msg.find("CAP") != string::npos && msg.find("PASS") != string::npos)) {
-			disconnectClient(clientfd);
-			// return "";
-		}
+		// if ((msg.find("PASS") != string::npos && msg.find("USER") != string::npos) || (msg.find("NICK") != string::npos && msg.find("USER") != string::npos) || (msg.find("NICK") != string::npos && msg.find("PASS") != string::npos) || (msg.find("CAP") != string::npos && msg.find("USER") != string::npos) || (msg.find("CAP") != string::npos && msg.find("NICK") != string::npos) || (msg.find("CAP") != string::npos && msg.find("PASS") != string::npos)) {
+		// 	cout << "la" << endl;
+		// 	disconnectClient(clientfd);
+		// 	// return "";
+		// }
 		cout << "Received raw message from client " << clientfd << ": " << msg << endl;
 		string tmp = msg;
 		msg = "";

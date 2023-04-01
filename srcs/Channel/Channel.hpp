@@ -37,6 +37,7 @@ class Channel {
 		void	addUser(Client * cli);
 		void	addInvite(Client * cli);
 		void	removeUser(Client * cli);
+		void	removeInvite(Client * cli);
 		string	getStrAllUsers() const;
 		string	getStrAllInvite() const;
 		string	getFirstUser() const;

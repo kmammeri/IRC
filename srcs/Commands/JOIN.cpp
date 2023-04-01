@@ -16,6 +16,10 @@ bool JOIN::execute(Input const & cmd, Client * cli, IRCServer & serv) {
 	Channel *chan = serv.getChannel(chanName);
 
 	if (!chan) {
+		if (serv.getChannels().size() >= MAX_CHANNELS) {
+			cli->sendReply("Cannot creat channel, number max of channels reached");
+			return false;
+		}
 		if (cmd.getTokens().size() == 3 && (atoi(cmd.getTokens()[2].c_str()) == PRIVATE || atoi(cmd.getTokens()[2].c_str()) == INVITE_ONLY || atoi(cmd.getTokens()[2].c_str()) == PRIVATE_WITH_INVITE))
 			serv.createChannel(chanName, atoi(cmd.getTokens()[2].c_str()));
 		else
@@ -26,9 +30,15 @@ bool JOIN::execute(Input const & cmd, Client * cli, IRCServer & serv) {
 	}
 	if (chan->getMode() != PUBLIC && chan->getOperator() != cli->getNickname() && chan->getStrAllInvite().find(cli->getNickname()) == string::npos) {
 		cout << "Error: Cannot join channel (+i) channel mode = " << chan->getMode() << endl;
-		cli->sendReply("473 Cannot join channel (+i)\r\n");
+		cli->sendReply(":" + string(SERVER_NAME) + "473 Cannot join channel (+i)\r\n");
 		return false;
 	}
+	if (chan->getUsers().size() >= MAX_CLIENTS_IN_CHANNEL) {
+		cli->sendReply(":" + string(SERVER_NAME) + " 471 " + cli->getNickname() + " " + chanName + " :Cannot join channel (+l)\r\n");
+		return false;
+	}
+	if (chan->getStrAllInvite().find(cli->getNickname()) == string::npos)
+		chan->removeInvite(cli);
 	chan->addUser(cli);
 	chan->sendToAll(":" + cli->getNickname() + "!" + cli->getUsername() + "@" + cli->getHostname() + " JOIN " + chanName + "\r\n");
 

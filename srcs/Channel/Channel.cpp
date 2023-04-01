@@ -95,6 +95,15 @@ void Channel::removeUser(Client *cli)
 	}
 }
 
+void Channel::removeInvite(Client *cli)
+{
+	
+	if (this->_inviteList.find(cli->getNickname()) != this->_inviteList.end())
+	{
+		this->_inviteList.erase(cli->getNickname());
+	}
+}
+
 void Channel::setTopic(string const & topic) {
 	this->_topic = topic;
 }

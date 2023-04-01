@@ -17,6 +17,7 @@ bool USER::execute(Input const & cmd, Client * cli, IRCServer & serv) {
 		return false;
 	}
 	cli->setUsername(cmd.getTokens()[1]);
+	cout << "*** USER OK ***" << endl;
 	if (cmd.getTokens().size() == 4) {
 		cli->setServername(cmd.getTokens()[2]);
 		cli->setRealname(cmd.getTokens()[4]);
