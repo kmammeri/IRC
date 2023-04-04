@@ -15,6 +15,7 @@
 # include <fcntl.h>
 # include <unistd.h>
 # include <ctime>
+# include <csignal>
 
 # include "../Client/Client.hpp"
 # include "../Channel/Channel.hpp"
