@@ -54,6 +54,10 @@ bool  MODE::execute(Input const & cmd, Client * cli, IRCServer & serv)
                     serv.getChannel(cmd.getTokens()[1])->sendToAll(":" + cli->getNickname() + " MODE " + cmd.getTokens()[1] + " -o " + serv.getChannel(cmd.getTokens()[1])->getOperator() + "\r\n");
                     serv.getChannel(cmd.getTokens()[1])->setOperator(target->getNickname());
                 }
+                else
+                {
+                    cli->sendReply(":" + string(SERVER_NAME) + " 401 " + cli->getNickname() + " " + cmd.getTokens()[3] + " :No such nick/channel\r\n");
+                }
             }
             else if (cmd.getTokens()[2] == "-o")
             {
@@ -63,6 +67,10 @@ bool  MODE::execute(Input const & cmd, Client * cli, IRCServer & serv)
                     serv.getChannel(cmd.getTokens()[1])->sendToAll(":" + cli->getNickname() + " MODE " + cmd.getTokens()[1] + " -o " + target->getNickname() + "\r\n");
                     serv.getChannel(cmd.getTokens()[1])->sendToAll(":" + cli->getNickname() + " MODE " + cmd.getTokens()[1] + " +o " + serv.getChannel(cmd.getTokens()[1])->getFirstUser() + "\r\n");
                     serv.getChannel(cmd.getTokens()[1])->setOperator(serv.getChannel(cmd.getTokens()[1])->getFirstUser());
+                }
+                else
+                {
+                    cli->sendReply(":" + string(SERVER_NAME) + " 401 " + cli->getNickname() + " " + cmd.getTokens()[3] + " :No such nick/channel\r\n");
                 }
             }
         }

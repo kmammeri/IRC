@@ -20,6 +20,8 @@ bool KICK::execute(Input const & cmd, Client * cli, IRCServer & serv) {
             serv.getChannel(cmd.getTokens()[1])->sendToAll(msg + "\r\n");
             serv.getChannel(cmd.getTokens()[1])->removeUser(target);
         }
+        else
+            cli->sendReply("401 "+ cli->getNickname() + " :No such nick/channel\r\n");
     }
     return true;
 }

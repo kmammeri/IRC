@@ -29,7 +29,7 @@ cout << "PRIVMSG command received" << endl;
             cli->sendReply("404 Cannot send to channel\r\n");
             return false;
         }
-        chan->sendToAllOthers(":" + cli->getNickname() + " PRIVMSG " + chan->getName() + " " + msg + "\r\n", *cli);
+        chan->sendToAllOthers(":" + cli->getNickname() + " PRIVMSG " + chan->getName() + " " + msg + "\r\n", cli->getNickname());
         return true;
     }
     cout << "************* debug : " << cmd.getTokens()[1].substr(0) << " **************" << endl;

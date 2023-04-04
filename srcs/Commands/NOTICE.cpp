@@ -19,7 +19,12 @@ cout << "NOTICE command received" << endl;
             return false;
         }
         cout << "Sending to channel " << chan->getName() << endl;
-        chan->sendToAllOthers(":" + cli->getNickname() + " NOTICE " + chan->getName() + " " + msg + "\r\n", *cli);
+        if (chan->getStrAllUsers().find(cli->getNickname()) == string::npos) {
+            cout << "Error: Cannot send to channel" << endl;
+            cli->sendReply("404 Cannot send to channel\r\n");
+            return false;
+        }
+        chan->sendToAllOthers(":" + cli->getNickname() + " NOTICE " + chan->getName() + " " + msg + "\r\n", cli->getNickname());
         return true;
     }
     Client *target = serv.getClientByNick(cmd.getTokens()[1].substr(0));

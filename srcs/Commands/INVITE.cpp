@@ -21,7 +21,14 @@ bool  INVITE::execute(Input const & cmd, Client * cli, IRCServer & serv)
             }
             else if (serv.getChannel(cmd.getTokens()[2])->getInviteListe().size() > MAX_INVITE)
             {
-                cli->sendReply(":" + cli->getNickname() + " cannot invite more client to this channel\r\n");
+                cli->sendReply(":irc.server.com 471 " + cli->getNickname() + " " + serv.getChannel(cmd.getTokens()[2])->getName() + " :Cannot join channel (+l)\r\n");
+
+                // cli->sendReply("473" + cli->getNickname() + " cannot invite more client to this channel\r\n");
+                return false;
+            }
+            else if (!target)
+            {
+                cli->sendReply("401 "+ cli->getNickname() + " :No such nick/channel\r\n");
                 return false;
             }
         }

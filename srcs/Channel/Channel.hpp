@@ -24,7 +24,7 @@ class Channel {
 		~Channel();
 
 		void sendToAll(string msg) const;
-		void sendToAllOthers(string msg, const Client &cli) const;
+		void sendToAllOthers(string msg, const string &cli) const;
 
 		// Getters
 		string	getName() const;
