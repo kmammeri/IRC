@@ -5,6 +5,10 @@
 #include "../Client/Client.hpp"
 #include "../utils/utils.hpp"
 
+
+
+int State = UP;
+
 // Constructors
 
 IRCServer::IRCServer(int port,  const char* password, int state):
@@ -72,12 +76,36 @@ void IRCServer::_setCmdsBank() {
 	this->_commands.insert(pair<string, ACommand*>("NOTICE", new NOTICE()));
 }
 
+// sigjmp_buf jmpbuf;
+
+// void sigint_handler(int signal)
+// {
+// 	(void)signal;
+// 	State = DOWN;
+//     std::cout << "Le signal SIGINT a été reçu." << std::endl;
+//     siglongjmp(jmpbuf, 1);
+// }
+
+void sigint_handler(int signal)
+{
+	(void)signal;
+    std::cout << "Le signal SIGINT a été reçu. Arrêt en cours..." << std::endl;
+    State = DOWN;
+}
+
 void IRCServer::start() {
 
 	this->_init();
 	this->_setCmdsBank();
 
-	while (this->_state == UP) {
+	// Handle SIGINT
+	struct sigaction sigIntHandler;
+    sigIntHandler.sa_handler = sigint_handler;
+    sigemptyset(&sigIntHandler.sa_mask);
+    sigIntHandler.sa_flags = 0;
+    sigaction(SIGINT, &sigIntHandler, NULL);
+
+	while (State == UP) {
 		// Wait for a activity on one of the sockets
 		poll(this->_pollfds.data(), this->_pollfds.size(), -1);
 
@@ -148,6 +176,7 @@ void IRCServer::start() {
 		// }
 		cout << "========================================" << endl;
 	}
+	cout << "Closing Irc Server ..." << endl;
 }
 
 // Create a new unauthentificate client and add it to the clients vector and pollfds vector
