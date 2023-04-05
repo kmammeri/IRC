@@ -8,6 +8,11 @@ bool  MODE::execute(Input const & cmd, Client * cli, IRCServer & serv)
     }
     if (serv.getChannel(cmd.getTokens()[1]))
     {
+        if (serv.getChannel(cmd.getTokens()[1])->getUsers().find(cli->getNickname()) == serv.getChannel(cmd.getTokens()[1])->getUsers().end())
+        {
+            cli->sendReply(":" + string(SERVER_NAME) + " 442 " + cli->getNickname() + " : " + serv.getChannel(cmd.getTokens()[1])->getName() + "You're not on that channel \r\n");
+            return false;
+        }
         if (cmd.getTokens().size() == 2)
         {
             switch(serv.getChannel(cmd.getTokens()[1])->getMode())

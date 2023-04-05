@@ -20,6 +20,12 @@ bool PRIVMSG::execute(Input const & cmd, Client * cli, IRCServer & serv) {
             cli->sendReply("404 Cannot send to channel\r\n");
             return false;
         }
+        if (cmd.getTokens()[2] == ":!bot")
+        {   
+
+            cli->sendReply(":bot PRIVMSG " + chan->getName() + " Hello, I am the IRC Bot. You are on the " + chan->getName() + " channel. If you have any question just ask chatGPT, it's way better than me. \r\n");
+            return true;
+        }
         chan->sendToAllOthers(":" + cli->getNickname() + " PRIVMSG " + chan->getName() + " " + msg + "\r\n", cli->getNickname());
         return true;
     }

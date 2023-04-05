@@ -21,6 +21,10 @@ bool  QUIT::execute(Input const & cmd, Client * cli, IRCServer & serv)
                     serv.getChannel(list[j])->sendToAll(":" + cli->getNickname() + " MODE " + list[j] + " -o " + cli->getNickname() + "\r\n");
                 }
                 serv.getChannel(list[j])->sendToAll(":" + cli->getNickname() + " QUIT :" + cmd.getTokens()[1] + "\r\n");
+                if (serv.getChannel(list[j])->getUsers().size() == 0)
+                {
+                    serv.deleteChannel(list[j]);
+                }
             }
         }
     }

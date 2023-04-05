@@ -180,7 +180,7 @@ void IRCServer::_acceptConnection() {
 
 void IRCServer::_registrationProced(Client * cli) const {
 
-	cout << "LE CLIENT EST REGISTER" << endl;
+	cout << "CLIENT REGISTERED" << endl;
 	cli->setRegistration(true);
 	cli->sendReply(":" + string(SERVER_NAME) + " 001 " + cli->getNickname() + " :Welcome to the Internet Relay Network " + cli->getNickname() + "!" +
             cli->getUsername() + "@" + cli->getHostname() + "\r\n");
