@@ -26,6 +26,10 @@ IRCServer::~IRCServer() {
 	for (map<string, Channel *>::iterator it = this->_channels.begin(); it != this->_channels.end(); it++)
 		delete it->second;
 	close(this->_mainSock);
+	for (vector<Client>::iterator it = this->_clients.begin(); it != this->_clients.end(); it++)
+		close(it->getFd());
+	for (map<string, ACommand *>::iterator it = this->_commands.begin(); it != this->_commands.end(); it++)
+		delete it->second;
 }
 
 // Memnber functions

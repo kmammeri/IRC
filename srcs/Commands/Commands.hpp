@@ -16,6 +16,7 @@ using namespace std;
 class ACommand {
 	public:
 		virtual bool execute(Input const & cmd, Client * cli, IRCServer & serv) = 0;
+		virtual ~ACommand() {};
 };
 
 class PASS: public ACommand {
