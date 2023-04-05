@@ -93,7 +93,7 @@ void IRCServer::_setCmdsBank() {
 void sigint_handler(int signal)
 {
 	(void)signal;
-    std::cout << "Le signal SIGINT a été reçu. Arrêt en cours..." << std::endl;
+	cout << endl << "Closing Irc Server ..." << endl;
     State = DOWN;
 }
 
@@ -180,7 +180,6 @@ void IRCServer::start() {
 		// }
 		cout << "========================================" << endl;
 	}
-	cout << "Closing Irc Server ..." << endl;
 }
 
 // Create a new unauthentificate client and add it to the clients vector and pollfds vector
