@@ -16,7 +16,6 @@ bool NICK::execute(Input const & cmd, Client * cli, IRCServer & serv) {
 		cli->sendReply("433 Nickname is already in use");
 		return false;
 	}
-	cout << "*** NICK OK ***" << endl;
 	cli->setNickname(cmd.getTokens()[1]);
 	return true;
 }

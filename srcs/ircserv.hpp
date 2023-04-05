@@ -1,6 +1,5 @@
 #pragma once
 
-// using namespace std;
 #define DEBUG
 
 #define LEN_MAX	1024

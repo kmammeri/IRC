@@ -9,7 +9,6 @@ bool PASS::execute(Input const & cmd, Client * cli, IRCServer & serv) {
 	}
 	if (cli->isAuthentificated())
 	{
-		cout << "Already authentificated" << endl;
 		return true;
 	}
 	if (cmd.getTokens().size() < 2) {
@@ -17,7 +16,6 @@ bool PASS::execute(Input const & cmd, Client * cli, IRCServer & serv) {
 		return false;
 	}
 	if (cmd.getTokens()[1] == serv.getPassword()) {
-		cout << "*** PASS OK ***" << endl;
 		cli->setAuthentification(true);
 		return true;
 	}

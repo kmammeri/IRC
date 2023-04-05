@@ -11,14 +11,11 @@ int State = UP;
 
 // Constructors
 
-IRCServer::IRCServer(int port,  const char* password, int state):
+IRCServer::IRCServer(int port,  const char* password):
 	_port(port),
-	_password(password), 
-	_state(state)
+	_password(password)
 	 {
 		this->_serverName = SERVER_NAME;
-		// std::time_t result = std::time(NULL);
-		// this->_creationDate = std::ctime(&result);
 	 }
 
 IRCServer::~IRCServer() {
@@ -70,7 +67,6 @@ void IRCServer::_setCmdsBank() {
 	this->_commands.insert(pair<string, ACommand*>("PRIVMSG", new PRIVMSG()));
 	this->_commands.insert(pair<string, ACommand*>("QUIT", new QUIT()));
 	this->_commands.insert(pair<string, ACommand*>("PING", new PING()));
-	// this->_commands.insert(pair<string, ACommand*>("PONG", new PONG()));
 	this->_commands.insert(pair<string, ACommand*>("LIST", new LIST()));
 	this->_commands.insert(pair<string, ACommand*>("NAMES", new NAMES()));
 	this->_commands.insert(pair<string, ACommand*>("TOPIC", new TOPIC()));
@@ -79,16 +75,6 @@ void IRCServer::_setCmdsBank() {
 	this->_commands.insert(pair<string, ACommand*>("INVITE", new INVITE()));
 	this->_commands.insert(pair<string, ACommand*>("NOTICE", new NOTICE()));
 }
-
-// sigjmp_buf jmpbuf;
-
-// void sigint_handler(int signal)
-// {
-// 	(void)signal;
-// 	State = DOWN;
-//     std::cout << "Le signal SIGINT a été reçu." << std::endl;
-//     siglongjmp(jmpbuf, 1);
-// }
 
 void sigint_handler(int signal)
 {
@@ -171,13 +157,6 @@ void IRCServer::start() {
 				}
 			}
 		}
-		// cout << "all channels:::" << endl;
-		// for (map<string, Channel *>::iterator it = this->_channels.begin(); it != this->_channels.end(); ++it){
-		// 	cout << "  " << it->first << ":" << endl;
-		// 	for (map<string, Client>::const_iterator it2 = it->second->getUsers().begin(); it2 != it->second->getUsers().end(); ++it2) {
-		// 		cout << "    " << it2->first << endl;
-		// 	}
-		// }
 		cout << "========================================" << endl;
 	}
 }
@@ -250,9 +229,6 @@ string IRCServer::receiveMessage(int clientfd) {
 	static string msg;
 	
 	int n = recv(clientfd, buffer, sizeof(buffer), 0);
-	// if (n < 0) {
-	// 	throw runtime_error("Error: recv() failed");
-	// }
 	if (n == 0) {
 		disconnectClient(clientfd);
 	}
@@ -266,11 +242,6 @@ string IRCServer::receiveMessage(int clientfd) {
 	}
 	else {
 		msg += buffer;
-		// if ((msg.find("PASS") != string::npos && msg.find("USER") != string::npos) || (msg.find("NICK") != string::npos && msg.find("USER") != string::npos) || (msg.find("NICK") != string::npos && msg.find("PASS") != string::npos) || (msg.find("CAP") != string::npos && msg.find("USER") != string::npos) || (msg.find("CAP") != string::npos && msg.find("NICK") != string::npos) || (msg.find("CAP") != string::npos && msg.find("PASS") != string::npos)) {
-		// 	cout << "la" << endl;
-		// 	disconnectClient(clientfd);
-		// 	// return "";
-		// }
 		cout << "Received raw message from client " << clientfd << ": " << msg << endl;
 		string tmp = msg;
 		msg = "";

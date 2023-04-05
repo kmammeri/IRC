@@ -31,10 +31,7 @@ class IRCServer {
 	private:
 		int						_port;
 		string					_password;
-		string					_serverName;
-		// string					_creationDate;
-		int 					_state;				
-		
+		string					_serverName;			
 		int 					_mainSock;
 		vector<struct pollfd>	_pollfds;
 
@@ -52,7 +49,7 @@ class IRCServer {
 		bool	_tryRegistration(Input const & input, Client *cli, IRCServer & serv);
 
 	public:
-		IRCServer(int port, const char* password, int state);
+		IRCServer(int port, const char* password);
 		~IRCServer();
 		void 	start();
 		string	receiveMessage(int fd);

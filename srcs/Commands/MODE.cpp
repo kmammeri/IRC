@@ -8,7 +8,6 @@ bool  MODE::execute(Input const & cmd, Client * cli, IRCServer & serv)
     }
     if (serv.getChannel(cmd.getTokens()[1]))
     {
-        // cout << "number of users = " << serv.getChannel(cmd.getTokens()[1])->getUsers().size() << endl;
         if (cmd.getTokens().size() == 2)
         {
             switch(serv.getChannel(cmd.getTokens()[1])->getMode())
@@ -47,7 +46,6 @@ bool  MODE::execute(Input const & cmd, Client * cli, IRCServer & serv)
                     return true;
                 }
                 Client    *target = serv.getClientByNick(cmd.getTokens()[3]);
-                // cout << "test target = " << target->getNickname() << endl;
                 if (target)
                 {
                     serv.getChannel(cmd.getTokens()[1])->sendToAll(":" + cli->getNickname() + " MODE " + cmd.getTokens()[1] + " +o " + target->getNickname() + "\r\n");

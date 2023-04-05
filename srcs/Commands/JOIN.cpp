@@ -25,11 +25,9 @@ bool JOIN::execute(Input const & cmd, Client * cli, IRCServer & serv) {
 		else
 			serv.createChannel(chanName, PUBLIC);
 		chan = serv.getChannel(chanName);
-		// cout << "Channel " << chanName << " created mode = " << chan->getMode() << endl;
 		chan->setOperator(cli->getNickname());
 	}
 	if (chan->getMode() != PUBLIC && chan->getOperator() != cli->getNickname() && chan->getStrAllInvite().find(cli->getNickname()) == string::npos) {
-		cout << "Error: Cannot join channel (+i) channel mode = " << chan->getMode() << endl;
 		cli->sendReply(":" + string(SERVER_NAME) + " 473 " + cli->getNickname() + " " + chanName + " :Cannot join channel (+i)\r\n");
 		return false;
 	}
