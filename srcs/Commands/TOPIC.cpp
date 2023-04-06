@@ -10,7 +10,7 @@ bool  TOPIC::execute(Input const & cmd, Client * cli, IRCServer & serv)
     {
         if (cmd.getTokens().size() > 2 && cli->getNickname() == serv.getChannel(cmd.getTokens()[1])->getOperator())
         {
-            string topic = cmd.getTokens()[2];
+            string topic = cmd.getTokens()[2].substr(1);
             for (size_t i = 3; i < cmd.getTokens().size(); i++)
                 topic += " " + cmd.getTokens()[i];
             serv.getChannel(cmd.getTokens()[1])->setTopic(topic);
